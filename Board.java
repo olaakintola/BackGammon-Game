@@ -32,7 +32,8 @@ public class Board extends BorderPane {
         /*this stackpane is the root node of the scene
         * it draws the backgammon board and as it's the root all other nodes are drawn on top of it*/
         StackPane sp = new StackPane();
-        Image img = new Image("file:src/backgammonBoard.jpg");
+        //getClass().getResource("backgammonBoard.jpg")
+        Image img = new Image(getClass().getResourceAsStream("backgammonBoard.jpg"));
         ImageView imgView = new ImageView(img);
         sp.getChildren().add(imgView);
         imgView.setFitHeight(656);
