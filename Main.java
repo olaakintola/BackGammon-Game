@@ -1,3 +1,9 @@
+/*
+Main Class
+Written by: Shane Byrne, Weronika Wolska, Ola Akintola
+Date: 11/02/2019
+* */
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
