@@ -162,9 +162,19 @@ public class Board extends BorderPane {
     addPip() to add a pip at its final position
     * */
     public void move(int startingPosition, int moveAmount, char pipType){
-         int finalPos = startingPosition + moveAmount;
-         removePip(startingPosition, pipType);
-         addPip(finalPos, pipType);
+        if(startingPosition > 25 || startingPosition < 0){
+            System.out.println("There's no point here");
+        }
+
+        else if(pointHolder[startingPosition].getPlayerPip() == 0){
+            System.out.println("There's no pip here");
+        }
+
+        else{
+            int finalPos = startingPosition + moveAmount;
+            removePip(startingPosition, pipType);
+            addPip(finalPos, pipType);
+        }
     }
 
     //method used by board initialize to add pips to the points
@@ -174,6 +184,11 @@ public class Board extends BorderPane {
     many pips that position has.
     */
     private void addPip(int pointNumber, char pipColour){
+        //sets the pip colour for the point if it's empty before adding
+        if(pointHolder[pointNumber].getPlayerPip() == 0){
+            pointHolder[pointNumber].setPipColour(pipColour);
+        }
+
         //different statements are required for each grid as the top and bottom are drawn differently and they
         //each have different gridpanes as parents
         if(pointNumber <= 12 && pointNumber > 0){
@@ -409,7 +424,7 @@ public class Board extends BorderPane {
             }
         }
 
-        if(pointNumber < 25 && pointNumber > 13){
+        if(pointNumber < 25 && pointNumber > 12){
 
             if(pointNumber < 19){
                 //label drawn the same as in the bottom grids
@@ -466,6 +481,46 @@ public class Board extends BorderPane {
                         topRightGrid.getChildren().add(pointHolder[pointNumber].peek());
                     }
                 }
+            }
+        }
+    }
+
+    //this flips the board view, used for changing player turns
+    public void boardFlip(){
+        /*
+           method works by swapping each bottom point with the point directly above it
+        *  the pips and 1 and 24 are swapped, then 2 and 23, all the way to 12 and 13
+        *  */
+        int bottomPoint = 1, topPoint = 24;
+        int bottomPipNumber, topPipNumber;
+        char bottomPipColour, topPipColour;
+
+        for (; bottomPoint<topPoint; bottomPoint++, topPoint--){
+            //number of pips and colours of the two points are stored as these change as pips are removed / added
+            bottomPipNumber = pointHolder[bottomPoint].getPlayerPip();
+            bottomPipColour = pointHolder[bottomPoint].getPipColour();
+
+            topPipNumber = pointHolder[topPoint].getPlayerPip();
+            topPipColour = pointHolder[topPoint].getPipColour();
+
+            //removes old pips from bottom point
+            for(int k=0; k<bottomPipNumber; k++){
+                removePip(bottomPoint, bottomPipColour);
+            }
+
+            //adds new pips to bottom point
+            for(int k=0; k< topPipNumber; k++){
+                addPip(bottomPoint, topPipColour);
+            }
+
+            //remove old pips from top point
+            for(int k=0; k<topPipNumber; k++){
+                removePip(topPoint, topPipColour);
+            }
+
+            //add new pips to top point
+            for(int k=0; k< bottomPipNumber; k++){
+                addPip(topPoint, bottomPipColour);
             }
         }
     }

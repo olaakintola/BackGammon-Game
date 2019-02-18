@@ -17,6 +17,7 @@ public class PointDataType {
     //counter that counts the number of actual pips in the point. placeholder pips are not counted
     private int playerPipCounter;
     private int columnIndex; //each point has a column index for its respective grid that's stored here
+    private char pipColour;
 
     public PointDataType(){
         this(15);
@@ -85,5 +86,13 @@ public class PointDataType {
     //returns columnIndex
     public int getColumnIndex(){
         return columnIndex;
+    }
+
+    public void setPipColour(char pipColour) {
+        this.pipColour = pipColour;
+    }
+
+    public char getPipColour() {
+        return pipColour;
     }
 }
