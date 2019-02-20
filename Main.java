@@ -47,6 +47,9 @@ public class Main extends Application{
         borderPane.setRight(bC);
         borderPane.setBottom(textPanel);
 
+
+
+
         //event handler handles inputs
         textPanel.button.setOnAction(e -> {
             if (textPanel.getTextFieldText().equals("move")) {
@@ -59,6 +62,11 @@ public class Main extends Application{
             }
 
             else if (textPanel.getTextFieldText().equals("flip")){
+                board.boardFlip();
+            }
+
+            else if (textPanel.getTextFieldText().equals("next")){
+                turn++;
                 board.boardFlip();
             }
 

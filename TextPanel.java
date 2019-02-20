@@ -25,7 +25,6 @@ public class TextPanel extends BorderPane {
         GridPane.setConstraints(textField, 5, 0);
 
         GridPane.setConstraints(textLabel, 0, 0);
-
         layout.getChildren().addAll(button, textField, textLabel, grid);
 
         setCenter(layout);
