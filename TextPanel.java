@@ -1,9 +1,12 @@
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import static javafx.geometry.Pos.CENTER;
 
 
 public class TextPanel extends BorderPane {
@@ -21,10 +24,14 @@ public class TextPanel extends BorderPane {
         textField.setPrefColumnCount(5);
         textField.getText();
         button = new Button("Enter");
-        GridPane.setConstraints(button, 5, 1);
-        GridPane.setConstraints(textField, 5, 0);
+        grid.setConstraints(button, 10, 1);
+        grid.setConstraints(textField, 10, 0);
+        grid.setVgap(5);
+        grid.setHgap(5);
+        //grid.setAlignment(Pos.CENTER);
+        //grid.getColumnConstraints();
 
-        GridPane.setConstraints(textLabel, 0, 0);
+        GridPane.setConstraints(textLabel, 9, 0);
         layout.getChildren().addAll(button, textField, textLabel, grid);
 
         setCenter(layout);

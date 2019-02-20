@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 
+
+    BackgammonController bC = new BackgammonController();
+    TextPanel textPanel = new TextPanel();
+
     private Board board = new Board();
     Exit exit = new Exit();
 
@@ -40,8 +44,7 @@ public class Main extends Application{
         BorderPane borderPane = new BorderPane();
         primaryStage.setOnCloseRequest(e -> exit.exitProgram(primaryStage));
 
-        BackgammonController bC = new BackgammonController();
-        TextPanel textPanel = new TextPanel();
+
 
         borderPane.setCenter(board);
         borderPane.setRight(bC);
@@ -91,7 +94,9 @@ public class Main extends Application{
                      // if the two die output the same result, roll again
                     } else{
                         diceResult1 = dice1.rollDice();
+                        System.out.println(diceResult1);
                         diceResult2 = dice2.rollDice();
+                        System.out.println(diceResult2);
                     }
 
 
