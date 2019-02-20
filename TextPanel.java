@@ -28,6 +28,7 @@ public class TextPanel extends BorderPane {
         grid.setConstraints(textField, 10, 0);
         grid.setVgap(5);
         grid.setHgap(5);
+        grid.setAlignment(CENTER);
         //grid.setAlignment(Pos.CENTER);
         //grid.getColumnConstraints();
 

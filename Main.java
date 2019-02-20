@@ -64,9 +64,6 @@ public class Main extends Application{
                 exit.exitProgram(primaryStage);
             }
 
-            else if (textPanel.getTextFieldText().equals("flip")){
-                board.boardFlip();
-            }
 
             else if (textPanel.getTextFieldText().equals("next")){
                 turn++;
