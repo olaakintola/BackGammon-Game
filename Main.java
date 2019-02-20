@@ -22,6 +22,15 @@ public class Main extends Application{
 
     private int textRow = 0;
 
+    int turn=1;
+    int player1Tracker;
+    int player2Tracker;
+
+    // dice initialisation
+    Dice dice1 = new Dice();
+    Dice dice2 = new Dice();
+
+
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -29,6 +38,7 @@ public class Main extends Application{
     public void start(Stage primaryStage){
         //Borderpane is used to format the stage
         BorderPane borderPane = new BorderPane();
+        primaryStage.setOnCloseRequest(e -> exit.exitProgram(primaryStage));
 
         BackgammonController bC = new BackgammonController();
         TextPanel textPanel = new TextPanel();
@@ -50,6 +60,39 @@ public class Main extends Application{
 
             else if (textPanel.getTextFieldText().equals("flip")){
                 board.boardFlip();
+            }
+
+            else if (textPanel.getTextFieldText().equals("roll")){
+
+                int diceResult1 = dice1.rollDice();
+                System.out.println(diceResult1);
+
+                int diceResult2 = dice2.rollDice();
+                System.out.println(diceResult2);
+
+                // if the die are rolled for the first time, check who's result is higher
+                // to determine who goes first
+                if(turn==1){
+                    if(diceResult1>diceResult2){
+                        player1Tracker = 0;
+                        player2Tracker = 1;
+                    } else if(diceResult1<diceResult2){
+                        player1Tracker = 1;
+                        player2Tracker = 0;
+
+                     // if the two die output the same result, roll again
+                    } else{
+                        diceResult1 = dice1.rollDice();
+                        diceResult2 = dice2.rollDice();
+                    }
+
+
+                } else {
+                    if(diceResult1 == diceResult2){
+                        Dice dice3 = new Dice(diceResult1);
+                        Dice dice4 = new Dice(diceResult1);
+                    }
+                }
             }
 
             //if none of the other functions are being called it is assumed move is called
