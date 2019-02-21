@@ -1,3 +1,8 @@
+/*
+    Class that closes the application properly
+    Written by Weronika Wolska
+ */
+
 import javafx.stage.Stage;
 
 public class Exit {

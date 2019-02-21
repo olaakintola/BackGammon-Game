@@ -1,3 +1,8 @@
+/*
+    Class that displays a pop up window when the user tries to exit the application
+        Written by Weronika Wolska
+ */
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
