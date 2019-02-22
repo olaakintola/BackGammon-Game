@@ -55,7 +55,11 @@ public class Main extends Application{
     public void start(Stage primaryStage){
         //Borderpane is used to format the stage
         BorderPane borderPane = new BorderPane();
-        primaryStage.setOnCloseRequest(e -> exit.exitProgram(primaryStage));
+        //opens confirm box on close request
+        primaryStage.setOnCloseRequest(e -> {
+            e.consume();
+            exit.exitProgram(primaryStage);
+        });
 
         borderPane.setCenter(board);
         borderPane.setRight(bC);
