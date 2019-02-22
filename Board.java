@@ -170,6 +170,10 @@ public class Board extends BorderPane {
             System.out.println("There's no pip here");
         }
 
+        else if(startingPosition + moveAmount > 24 || startingPosition + moveAmount < 0){
+            removePip(startingPosition, pipType);
+        }
+
         else{
             int finalPos = startingPosition + moveAmount;
             removePip(startingPosition, pipType);
