@@ -86,6 +86,7 @@ public class Main extends Application{
                 infoPanel.addText(1, " ");
             }
 
+
             //if player1's name is not null and player2's name is, player2's name becomes the input
             //the dice is then rolled
             else if(player2.getPlayerName()==null){
