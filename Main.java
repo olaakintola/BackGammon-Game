@@ -241,8 +241,17 @@ public class Main extends Application{
             //if the second input was valid move is set the secondInt string as an int
             if (isInt2) move = Integer.parseInt(secondInt);
 
+            char pipColour;
+            if(turn % 2 == 0){
+                pipColour = player1.getColur;
+            }
+
+            if(turn % 2 == 1){
+                pipColour = player2.getColur;
+            }
+
             //if both inputs were valid board.move is called with them
-            if(isInt && isInt2) board.move(point, move, 'B');
+            if(isInt && isInt2) board.move(point, move * -1, pipColour);
         }
     }
 }
