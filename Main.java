@@ -21,6 +21,9 @@ public class Main extends Application{
 
     BackgammonController bC = new BackgammonController();
     TextPanel textPanel = new TextPanel();
+    
+ //   AnnounceGame newGame = new AnnounceGame();
+//    newGame.loadDialog();
 
     private Board board = new Board();
     Exit exit = new Exit();
@@ -51,7 +54,13 @@ public class Main extends Application{
     public static void main(String[] args) {
         Application.launch(args);
     }
+    
+/*    public static void announce_game() {
+    	AnnounceGame newgame = new AnnounceGame();
+    	AnnounceGame.loadDialog();
+    }*/
 
+    
     public void start(Stage primaryStage){
         //Borderpane is used to format the stage
         BorderPane borderPane = new BorderPane();
@@ -60,6 +69,9 @@ public class Main extends Application{
         borderPane.setCenter(board);
         borderPane.setRight(bC);
         borderPane.setBottom(textPanel);
+        
+    	AnnounceGame newgame = new AnnounceGame();
+    	AnnounceGame.loadDialog();
 
         //event handler handles inputs
         textPanel.button.setOnAction(e -> {
