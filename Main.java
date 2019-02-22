@@ -58,16 +58,28 @@ public class Main extends Application{
         borderPane.setCenter(board);
         borderPane.setRight(bC);
         borderPane.setBottom(textPanel);
-        
+
+        bC.addText(0, "");
+        textRow++;
+
     	AnnounceGame newgame = new AnnounceGame();
     	AnnounceGame.loadDialog();
 
-
+    	Player player1 = new Player();
+    	Player player2 = new Player();
 
 
         //event handler handles inputs
         textPanel.button.setOnAction(e -> {
-            if (textPanel.getTextFieldText().equals("move")) {
+            if(player1.getPlayerName()==null){
+                player1.setPlayerName(textPanel.getTextFieldText());
+                bC.addText(2, " ");
+
+
+
+            } else if(player2.getPlayerName()==null){
+                player2.setPlayerName(textPanel.getTextFieldText());
+            } else if (textPanel.getTextFieldText().equals("move")) {
                 move();
             }
 
@@ -108,6 +120,18 @@ public class Main extends Application{
                         System.out.println(diceResult2);
                     }
 
+                    if(player1Tracker==0){
+                        player1.setColour('B');
+                        player2.setColour('W');
+                        System.out.println("Player 1 is black.");
+                        System.out.println("Player 2 is white.");
+                    } else {
+                        player1.setColour('W');
+                        player2.setColour('B');
+                        System.out.println("Player 1 is white.");
+                        System.out.println("Player 2 is black.");
+                    }
+
 
                 } else {
                     if(diceResult1 == diceResult2){
@@ -123,7 +147,8 @@ public class Main extends Application{
             }
 
             bC.addText(textRow, textPanel.getTextFieldText());
-                    textRow++;
+            if(textRow==1){ textRow+=2; }
+             else{       textRow++;}
                 });
 
         Scene scene = new Scene(borderPane);
