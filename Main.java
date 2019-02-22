@@ -32,6 +32,8 @@ public class Main extends Application{
     private int wait = 0;
 
     private int textRow = 0;
+
+    //used to check if there's a dice on the board
     private boolean diceOnBoard = false;
 
     ImageView diceImgView1;
@@ -77,9 +79,10 @@ public class Main extends Application{
             }
 
             else if (textPanel.getTextFieldText().equals("roll")){
+                //if there's a previous dice on the board it's removed
                 if(diceOnBoard == true){
                     borderPane.getChildren().removeAll(diceImgView1, diceImgView2);
-                    diceOnBoard = false; 
+                    diceOnBoard = false;
                 }
 
 
@@ -115,8 +118,8 @@ public class Main extends Application{
                     }
                 }
 
+                //Dice face is set to the same number as diceResult1
                 Image diceImg1;
-                Timeline roll1 = new Timeline();
                 switch (diceResult1){
                     case 1: diceImg1 = new Image(getClass().getResourceAsStream("Die1.png"));
                         break;
@@ -140,6 +143,11 @@ public class Main extends Application{
                 diceImgView1.setFitWidth(50);
                 borderPane.getChildren().add(diceImgView1);
 
+                //Timeline is used to animate dice roll
+                //Both dice go from the bottom center of the screen into the middle of the two panels
+                //they take .3 seconds to do this
+                Timeline roll1 = new Timeline();
+
                 roll1.getKeyFrames().addAll(
                         new KeyFrame(new Duration( 0), // set start position at 0
                                 new KeyValue(diceImgView1.translateXProperty(), 432),
@@ -152,7 +160,7 @@ public class Main extends Application{
                 );
                 roll1.play();
 
-                Timeline roll2 = new Timeline();
+                //same as above
                 Image diceImg2;
                 switch (diceResult2){
                     case 1: diceImg2 = new Image(getClass().getResourceAsStream("Die1.png"));
@@ -175,6 +183,8 @@ public class Main extends Application{
                 diceImgView2.setFitHeight(50);
                 diceImgView2.setFitWidth(50);
                 borderPane.getChildren().add(diceImgView2);
+
+                Timeline roll2 = new Timeline();
 
                 roll2.getKeyFrames().addAll(
                         new KeyFrame(new Duration( 0), // set start position at 0
