@@ -4,10 +4,17 @@ Written by: Shane Byrne, Weronika Wolska, Ola Akintola
 Date: 11/02/2019
 * */
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 
 public class Main extends Application{
 
@@ -25,6 +32,10 @@ public class Main extends Application{
     private int wait = 0;
 
     private int textRow = 0;
+    private boolean diceOnBoard = false;
+
+    ImageView diceImgView1;
+    ImageView diceImgView2;
 
     int turn=1;
     int player1Tracker;
@@ -44,14 +55,9 @@ public class Main extends Application{
         BorderPane borderPane = new BorderPane();
         primaryStage.setOnCloseRequest(e -> exit.exitProgram(primaryStage));
 
-
-
         borderPane.setCenter(board);
         borderPane.setRight(bC);
         borderPane.setBottom(textPanel);
-
-
-
 
         //event handler handles inputs
         textPanel.button.setOnAction(e -> {
@@ -71,6 +77,11 @@ public class Main extends Application{
             }
 
             else if (textPanel.getTextFieldText().equals("roll")){
+                if(diceOnBoard == true){
+                    borderPane.getChildren().removeAll(diceImgView1, diceImgView2);
+                    diceOnBoard = false; 
+                }
+
 
                 int diceResult1 = dice1.rollDice();
                 System.out.println(diceResult1);
@@ -103,6 +114,80 @@ public class Main extends Application{
                         Dice dice4 = new Dice(diceResult1);
                     }
                 }
+
+                Image diceImg1;
+                Timeline roll1 = new Timeline();
+                switch (diceResult1){
+                    case 1: diceImg1 = new Image(getClass().getResourceAsStream("Die1.png"));
+                        break;
+                    case 2: diceImg1 = new Image(getClass().getResourceAsStream("Die2.png"));
+                        break;
+                    case 3: diceImg1 = new Image(getClass().getResourceAsStream("Die3.png"));
+                        break;
+                    case 4: diceImg1 = new Image(getClass().getResourceAsStream("Die4.png"));
+                        break;
+                    case 5: diceImg1 = new Image(getClass().getResourceAsStream("Die5.png"));
+                        break;
+                    case 6: diceImg1 = new Image(getClass().getResourceAsStream("Die6.png"));
+                        break;
+                    default: diceImg1 = new Image(getClass().getResourceAsStream("Die1.png"));
+                }
+
+
+                diceImgView1 = new ImageView(diceImg1);
+
+                diceImgView1.setFitHeight(50);
+                diceImgView1.setFitWidth(50);
+                borderPane.getChildren().add(diceImgView1);
+
+                roll1.getKeyFrames().addAll(
+                        new KeyFrame(new Duration( 0), // set start position at 0
+                                new KeyValue(diceImgView1.translateXProperty(), 432),
+                                new KeyValue(diceImgView1.translateYProperty(), 656)
+                        ),
+                        new KeyFrame(new Duration(300), // set end position at 40s
+                                new KeyValue(diceImgView1.translateXProperty(), 216),
+                                new KeyValue(diceImgView1.translateYProperty(), 300)
+                        )
+                );
+                roll1.play();
+
+                Timeline roll2 = new Timeline();
+                Image diceImg2;
+                switch (diceResult2){
+                    case 1: diceImg2 = new Image(getClass().getResourceAsStream("Die1.png"));
+                        break;
+                    case 2: diceImg2 = new Image(getClass().getResourceAsStream("Die2.png"));
+                        break;
+                    case 3: diceImg2 = new Image(getClass().getResourceAsStream("Die3.png"));
+                        break;
+                    case 4: diceImg2 = new Image(getClass().getResourceAsStream("Die4.png"));
+                        break;
+                    case 5: diceImg2 = new Image(getClass().getResourceAsStream("Die5.png"));
+                        break;
+                    case 6: diceImg2 = new Image(getClass().getResourceAsStream("Die6.png"));
+                        break;
+                    default: diceImg2 = new Image(getClass().getResourceAsStream("Die1.png"));
+                }
+
+                diceImgView2 = new ImageView(diceImg2);
+
+                diceImgView2.setFitHeight(50);
+                diceImgView2.setFitWidth(50);
+                borderPane.getChildren().add(diceImgView2);
+
+                roll2.getKeyFrames().addAll(
+                        new KeyFrame(new Duration( 0), // set start position at 0
+                                new KeyValue(diceImgView2.translateXProperty(), 432),
+                                new KeyValue(diceImgView2.translateYProperty(), 656)
+                        ),
+                        new KeyFrame(new Duration(300), // set end position at 40s
+                                new KeyValue(diceImgView2.translateXProperty(), 648),
+                                new KeyValue(diceImgView2.translateYProperty(), 300)
+                        )
+                );
+                roll2.play();
+                diceOnBoard = true;
             }
 
             //if none of the other functions are being called it is assumed move is called
