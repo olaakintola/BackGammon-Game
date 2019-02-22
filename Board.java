@@ -162,18 +162,12 @@ public class Board extends BorderPane {
     addPip() to add a pip at its final position
     * */
     public void move(int startingPosition, int moveAmount, char pipType){
-        if(startingPosition > 25 || startingPosition < 0){
-            System.out.println("There's no point here");
-        }
-
-        else if(pointHolder[startingPosition].getPlayerPip() == 0){
-            System.out.println("There's no pip here");
-        }
-
-        else if(startingPosition + moveAmount > 24 || startingPosition + moveAmount < 0){
+        //if checks if the move will take pip off the board, if so only remove is called
+        if(startingPosition + moveAmount > 24 || startingPosition + moveAmount < 0){
             removePip(startingPosition, pipType);
         }
 
+        //otherwise remove and add pip methods are called
         else{
             int finalPos = startingPosition + moveAmount;
             removePip(startingPosition, pipType);
@@ -527,5 +521,9 @@ public class Board extends BorderPane {
                 addPip(topPoint, bottomPipColour);
             }
         }
+    }
+
+    public int getNumberOfPips(int point){
+        return pointHolder[point].getPlayerPip();
     }
 }

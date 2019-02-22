@@ -23,6 +23,7 @@ public class TextPanel extends BorderPane {
 
         GridPane grid = new GridPane();
         GridPane layout = new GridPane();
+        layout.setStyle("-fx-background-color:Wheat");
 
 
         Label textLabel = new Label("Enter instruction: ");

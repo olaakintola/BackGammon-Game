@@ -23,7 +23,7 @@ public class ConfirmBox {
         Stage popUpWindow = new Stage();
         popUpWindow.setMinWidth(250);
 
-        // makes sure no changes are made in the main window while this window is open
+        // makes sure no changes are made in the Main window while this window is open
         popUpWindow.initModality(Modality.APPLICATION_MODAL);
 
         // display parameters

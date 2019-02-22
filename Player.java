@@ -1,4 +1,6 @@
-import javafx.application.Application;
+/*
+ * Written by: Ola
+ * */
 
 public class Player {
 
@@ -6,22 +8,23 @@ public class Player {
     private char colour;
     private String playerName;
 
-
-
-    public Player(String playerName, char colour) {
-        this.playerName = playerName;
-        this.colour = colour;
-    }
-
     public String getPlayerName() {
         return playerName;
     }
 
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public void setColour(char c) {
+        this.colour = c;
+    }
 
     public char getColour() {
         return colour;
     }
 
+    //returns whether or not it's the player's turn
     public boolean isTurn(int turn, int playerController){
         return (turn%2 == playerController);
     }
