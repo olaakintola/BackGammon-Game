@@ -46,7 +46,5 @@ public class BackgammonController extends BorderPane
 		GridPane.setConstraints(label, 0, position);
 		// add the child to the grid
 		grid.getChildren().add(label);
-    
 	}
-
 }
