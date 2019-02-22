@@ -300,7 +300,7 @@ public class Main extends Application{
             if (isInt2) move = Integer.parseInt(secondInt);
 
             //if both inputs were valid board.move is called with them
-            if(isInt && isInt2) board.move(point, move, 'B');
+            if(isInt && isInt2) board.move(point, move * -1, 'W');
         }
     }
 }
