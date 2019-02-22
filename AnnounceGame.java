@@ -31,5 +31,5 @@ public class AnnounceGame {
 		popUp.setScene(scene);
 		popUp.showAndWait();	
 	} 
-	
+
 }

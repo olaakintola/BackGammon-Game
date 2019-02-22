@@ -40,11 +40,29 @@ public class BackgammonController extends BorderPane
 	 * the position parameter to determine row to output the string
 	 * */
 	public void addText(int position, String text){
+
+		Label label = new Label();
+		if(position==0){
+			label.setText("Enter first player's name: ");
+		} else if(position==2){
+			label.setText("Enter second player's name: ");
+		} else {
+			label.setText(text);
+		}
+
 		
 		// set the constraints
-		Label label = new Label(text);
+		Label label3 = new Label(text);
+		Label label2 = new Label(" It is the next player's turn...Enter how many moves");
+		// setting the styles of the text being shown on the display panel
+        label3.setStyle("-fx-background-color:Wheat; -fx-text-fill:Black; -fx-font-size:20");
+        label2.setStyle("-fx-background-color:Yellow; -fx-text-fill:Black; -fx-font-size:20"); 
+
+
 		GridPane.setConstraints(label, 0, position);
+		GridPane.setConstraints(label2, 1, position);
+//		GridPane.setConstraint(label2, 1, position);
 		// add the child to the grid
-		grid.getChildren().add(label);
+		grid.getChildren().addAll(label, label2);
 	}
 }

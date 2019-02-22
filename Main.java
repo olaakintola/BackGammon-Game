@@ -4,23 +4,19 @@ Written by: Shane Byrne, Weronika Wolska, Ola Akintola
 Date: 11/02/2019
 * */
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
 
 public class Main extends Application{
 
 
     BackgammonController bC = new BackgammonController();
     TextPanel textPanel = new TextPanel();
+    
+ //   AnnounceGame newGame = new AnnounceGame();
+//    newGame.loadDialog();
 
     private Board board = new Board();
     Exit exit = new Exit();
@@ -32,12 +28,6 @@ public class Main extends Application{
     private int wait = 0;
 
     private int textRow = 0;
-
-    //used to check if there's a dice on the board
-    private boolean diceOnBoard = false;
-
-    ImageView diceImgView1;
-    ImageView diceImgView2;
 
     int turn=1;
     int player1Tracker;
@@ -51,19 +41,29 @@ public class Main extends Application{
     public static void main(String[] args) {
         Application.launch(args);
     }
+    
+/*    public static void announce_game() {
+    	AnnounceGame newgame = new AnnounceGame();
+    	AnnounceGame.loadDialog();
+    }*/
 
+    
     public void start(Stage primaryStage){
         //Borderpane is used to format the stage
         BorderPane borderPane = new BorderPane();
-        //opens confirm box on close request
-        primaryStage.setOnCloseRequest(e -> {
-            e.consume();
-            exit.exitProgram(primaryStage);
-        });
+        primaryStage.setOnCloseRequest(e -> exit.exitProgram(primaryStage));
+
+
 
         borderPane.setCenter(board);
         borderPane.setRight(bC);
         borderPane.setBottom(textPanel);
+        
+    	AnnounceGame newgame = new AnnounceGame();
+    	AnnounceGame.loadDialog();
+
+
+
 
         //event handler handles inputs
         textPanel.button.setOnAction(e -> {
@@ -83,12 +83,6 @@ public class Main extends Application{
             }
 
             else if (textPanel.getTextFieldText().equals("roll")){
-                //if there's a previous dice on the board it's removed
-                if(diceOnBoard == true){
-                    borderPane.getChildren().removeAll(diceImgView1, diceImgView2);
-                    diceOnBoard = false;
-                }
-
 
                 int diceResult1 = dice1.rollDice();
                 System.out.println(diceResult1);
@@ -121,87 +115,6 @@ public class Main extends Application{
                         Dice dice4 = new Dice(diceResult1);
                     }
                 }
-
-                //Dice face is set to the same number as diceResult1
-                Image diceImg1;
-                switch (diceResult1){
-                    case 1: diceImg1 = new Image(getClass().getResourceAsStream("Die1.png"));
-                        break;
-                    case 2: diceImg1 = new Image(getClass().getResourceAsStream("Die2.png"));
-                        break;
-                    case 3: diceImg1 = new Image(getClass().getResourceAsStream("Die3.png"));
-                        break;
-                    case 4: diceImg1 = new Image(getClass().getResourceAsStream("Die4.png"));
-                        break;
-                    case 5: diceImg1 = new Image(getClass().getResourceAsStream("Die5.png"));
-                        break;
-                    case 6: diceImg1 = new Image(getClass().getResourceAsStream("Die6.png"));
-                        break;
-                    default: diceImg1 = new Image(getClass().getResourceAsStream("Die1.png"));
-                }
-
-
-                diceImgView1 = new ImageView(diceImg1);
-
-                diceImgView1.setFitHeight(50);
-                diceImgView1.setFitWidth(50);
-                borderPane.getChildren().add(diceImgView1);
-
-                //Timeline is used to animate dice roll
-                //Both dice go from the bottom center of the screen into the middle of the two panels
-                //they take .3 seconds to do this
-                Timeline roll1 = new Timeline();
-
-                roll1.getKeyFrames().addAll(
-                        new KeyFrame(new Duration( 0), // set start position at 0
-                                new KeyValue(diceImgView1.translateXProperty(), 432),
-                                new KeyValue(diceImgView1.translateYProperty(), 656)
-                        ),
-                        new KeyFrame(new Duration(300), // set end position at 40s
-                                new KeyValue(diceImgView1.translateXProperty(), 216),
-                                new KeyValue(diceImgView1.translateYProperty(), 300)
-                        )
-                );
-                roll1.play();
-
-                //same as above
-                Image diceImg2;
-                switch (diceResult2){
-                    case 1: diceImg2 = new Image(getClass().getResourceAsStream("Die1.png"));
-                        break;
-                    case 2: diceImg2 = new Image(getClass().getResourceAsStream("Die2.png"));
-                        break;
-                    case 3: diceImg2 = new Image(getClass().getResourceAsStream("Die3.png"));
-                        break;
-                    case 4: diceImg2 = new Image(getClass().getResourceAsStream("Die4.png"));
-                        break;
-                    case 5: diceImg2 = new Image(getClass().getResourceAsStream("Die5.png"));
-                        break;
-                    case 6: diceImg2 = new Image(getClass().getResourceAsStream("Die6.png"));
-                        break;
-                    default: diceImg2 = new Image(getClass().getResourceAsStream("Die1.png"));
-                }
-
-                diceImgView2 = new ImageView(diceImg2);
-
-                diceImgView2.setFitHeight(50);
-                diceImgView2.setFitWidth(50);
-                borderPane.getChildren().add(diceImgView2);
-
-                Timeline roll2 = new Timeline();
-
-                roll2.getKeyFrames().addAll(
-                        new KeyFrame(new Duration( 0), // set start position at 0
-                                new KeyValue(diceImgView2.translateXProperty(), 432),
-                                new KeyValue(diceImgView2.translateYProperty(), 656)
-                        ),
-                        new KeyFrame(new Duration(300), // set end position at 40s
-                                new KeyValue(diceImgView2.translateXProperty(), 648),
-                                new KeyValue(diceImgView2.translateYProperty(), 300)
-                        )
-                );
-                roll2.play();
-                diceOnBoard = true;
             }
 
             //if none of the other functions are being called it is assumed move is called
@@ -305,11 +218,11 @@ public class Main extends Application{
 
             char pipColour;
             if(turn % 2 == 0){
-                //pipColour = player1.getColur;
+                pipColour = player1.getColur;
             }
 
             if(turn % 2 == 1){
-                //pipColour = player2.getColur;
+                pipColour = player2.getColur;
             }
 
             //if both inputs were valid board.move is called with them
