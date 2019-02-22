@@ -24,7 +24,7 @@ public class Main extends Application{
     private boolean secondLoop = false;
     private int wait = 0;
 
-    private int textRow = 1;
+    private int textRow = 0;
 
     int turn=1;
     int player1Tracker;
@@ -50,10 +50,6 @@ public class Main extends Application{
         borderPane.setRight(bC);
         borderPane.setBottom(textPanel);
 
-        bC.addText(0, textPanel.getTextFieldText());
-        String p1name = textPanel.getTextFieldText();
-        bC.addText(2, textPanel.getTextFieldText());
-        String p2name = textPanel.getTextFieldText();
 
 
 
@@ -101,23 +97,6 @@ public class Main extends Application{
                     }
 
 
-                    if(player1Tracker==0){
-                        Player player1 = new Player(p1name, 'b');
-                        System.out.println("Player 1: ");
-                        System.out.println(player1.getPlayerName());
-                        Player player2 = new Player(p2name, 'w');
-                        System.out.println("Player 2: " + p2name);
-                        System.out.println(player1.getColour());
-                    } else{
-                       Player player1 = new Player(p1name, 'w');
-                       System.out.println("Player 1: " + player1.getPlayerName());
-                       Player player2 = new Player(p2name, 'b');
-                        System.out.println("Player 2: " + player2.getPlayerName());
-                        System.out.println(player1.getColour());
-                        System.out.println(p1name);
-                    }
-
-
                 } else {
                     if(diceResult1 == diceResult2){
                         Dice dice3 = new Dice(diceResult1);
@@ -126,18 +105,14 @@ public class Main extends Application{
                 }
             }
 
-            /*
             //if none of the other functions are being called it is assumed move is called
             else{
                 moveInput(textPanel.getTextFieldText());
             }
 
-            */
             bC.addText(textRow, textPanel.getTextFieldText());
-            if(textRow==1){ textRow = 3;}
-            else{ textRow++;}
-
-        });
+                    textRow++;
+                });
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
