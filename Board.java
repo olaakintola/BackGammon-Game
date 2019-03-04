@@ -12,18 +12,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-public class Board extends BorderPane {
-    /* four girds are made, one for each section of the board
-    * this makes it a lot easier to handle the placement of the pips
-    * on the board */
-    private GridPane topRightGrid = new GridPane();
-    private GridPane topLeftGrid = new GridPane();
-    private GridPane bottomLeftGrid = new GridPane();
-    private GridPane bottomRightGrid = new GridPane();
+    public class Board extends BorderPane {
+        /* four girds are made, one for each section of the board
+         * this makes it a lot easier to handle the placement of the pips
+         * on the board */
+        private GridPane topRightGrid = new GridPane();
+        private GridPane topLeftGrid = new GridPane();
+        private GridPane bottomLeftGrid = new GridPane();
+        private GridPane bottomRightGrid = new GridPane();
+        private GridPane barGrid = new GridPane();
 
-    //an array of pointDataTypes which is the data type used to store the information of a given point
-    //26 are made, one for each point and bar position
-    private PointDataType[] pointHolder = new PointDataType[26];
+        //an array of pointDataTypes which is the data type used to store the information of a given point
+        //26 are made, one for each point and bar position
+        public PointDataType[] pointHolder = new PointDataType[26];
 
     //label array is used when there's an excess number of pips on a point, 26 are made, one for each position
     private Label[] labelArray = new Label[26];
@@ -41,7 +42,7 @@ public class Board extends BorderPane {
 
         boardInitialize(); //call to method to initialize the board state
 
-        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid);
+        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid);
         setCenter(sp);
     }
 
@@ -60,6 +61,8 @@ public class Board extends BorderPane {
         bottomRightGrid.setPadding(new Insets(412, 0, 0, 483));
         bottomRightGrid.setHgap(4);
 
+        barGrid.setPadding(new Insets(200, 0, 0, 411));
+        barGrid.setVgap(170);
 
         int temp = 6; //a temporary variable used in the for loops
         /*BOTTOM RIGHT GRID */
@@ -71,6 +74,7 @@ public class Board extends BorderPane {
         when actual pips are added into the columns, but every empty column needs to have one.
         each grid has one of these initialiser for loops and they all work in the same way
         */
+
         for(int i=0; i<6; i++){
             //this adds a point to the array, its position in the array is the same as its position on the board
             //i.e. the 6th point would be pointHolder[6]
@@ -153,6 +157,27 @@ public class Board extends BorderPane {
         for(int i=0; i<2; i++){
             addPip(24, 'W');
         }
+
+        //bar pips are added in here
+
+        pointHolder[0] = new PointDataType();
+        pointHolder[25] = new PointDataType();
+
+        pointHolder[25].push(new Pip('P'));
+        GridPane.setConstraints(pointHolder[25].peek(), 0, 0);
+        barGrid.getChildren().add(pointHolder[25].peek());
+        pointHolder[25].setColumnIndex(0);
+
+        pointHolder[0].push(new Pip('P'));
+        GridPane.setConstraints(pointHolder[0].peek(), 0, 1);
+        barGrid.getChildren().add(pointHolder[0].peek());
+        pointHolder[0].setColumnIndex(1);
+
+        topRightGrid.setGridLinesVisible(true);
+        topLeftGrid.setGridLinesVisible(true);
+        bottomLeftGrid.setGridLinesVisible(true);
+        bottomRightGrid.setGridLinesVisible(true);
+        barGrid.setGridLinesVisible(true);
     }
 
     /*
@@ -161,17 +186,28 @@ public class Board extends BorderPane {
     It works by calling removePip() to remove the pip at starting position and then calling
     addPip() to add a pip at its final position
     * */
-    public void move(int startingPosition, int moveAmount, char pipType){
+    public void move(int startingPosition, int moveAmount, char pipColour){
+        int finalPos = startingPosition + moveAmount;
+
+        //checks if a hit will take place
+        if(pointHolder[finalPos].getPlayerPip() == 1 && pointHolder[finalPos].getPipColour() != pipColour){
+            hitPip(startingPosition, finalPos, pipColour);
+        }
+
         //if checks if the move will take pip off the board, if so only remove is called
-        if(startingPosition + moveAmount > 24 || startingPosition + moveAmount < 0){
-            removePip(startingPosition, pipType);
+        else if(startingPosition + moveAmount < 0){
+            removePip(startingPosition, pipColour);
+        }
+
+
+        else if(finalPos == 0){
+            removePip(startingPosition, pipColour);
         }
 
         //otherwise remove and add pip methods are called
         else{
-            int finalPos = startingPosition + moveAmount;
-            removePip(startingPosition, pipType);
-            addPip(finalPos, pipType);
+            removePip(startingPosition, pipColour);
+            addPip(finalPos, pipColour);
         }
     }
 
@@ -189,6 +225,30 @@ public class Board extends BorderPane {
 
         //different statements are required for each grid as the top and bottom are drawn differently and they
         //each have different gridpanes as parents
+        if(pointNumber == 0 || pointNumber == 25){
+            pointHolder[pointNumber].pipCounterAdder();
+            int numberOfPips = pointHolder[pointNumber].getPlayerPip(); //No. of player pips in current pointer
+            if(numberOfPips > 1){
+                barGrid.getChildren().remove(labelArray[pointNumber]);
+
+                int labelText = numberOfPips;
+                labelArray[pointNumber] = new Label( labelText + " Pips");
+                GridPane.setConstraints(labelArray[pointNumber], 0, pointHolder[pointNumber].getColumnIndex());
+                barGrid.getChildren().add(labelArray[pointNumber]);
+                //red is used as the color as its visible over both red and white pips
+                labelArray[pointNumber].setTextFill(Color.web("red"));
+            }
+
+            else{
+                barGrid.getChildren().remove(pointHolder[pointNumber].peek());
+
+                pointHolder[pointNumber].push(new Pip(pipColour));
+                GridPane.setConstraints(pointHolder[pointNumber].peek(), 0, pointHolder[pointNumber].getColumnIndex());
+                barGrid.getChildren().add(pointHolder[pointNumber].peek());
+            }
+        }
+
+
         if(pointNumber <= 12 && pointNumber > 0){
 
             pointHolder[pointNumber].pipCounterAdder();
@@ -198,9 +258,7 @@ public class Board extends BorderPane {
                 //this if statement checks if there are already 5 pips at the position
                 //if there are a label is added at the 5th position
                 if(numberOfPips > 5){
-                    //previous label is removed to be replaced by new one
                     bottomLeftGrid.getChildren().remove(labelArray[pointNumber]);
-
                     //number of pips - 4 is the amount of pips at the 5th position
                     int labelText = numberOfPips - 4;
 
@@ -216,7 +274,6 @@ public class Board extends BorderPane {
                 //redrawing the whole thing with the new pip
                 else{
                     //this for loop empties the point and removes its previous pips from the board
-                    bottomLeftGrid.getChildren().remove(labelArray[pointNumber]);
                     for(int i=0; i < pointHolder[pointNumber].size(); i++){
                         bottomLeftGrid.getChildren().remove(pointHolder[pointNumber].peek());
                         pointHolder[pointNumber].pop();
@@ -254,7 +311,6 @@ public class Board extends BorderPane {
                 }
 
                 else {
-                    bottomRightGrid.getChildren().remove(labelArray[pointNumber]);
                     for(int i=0; i < pointHolder[pointNumber].size(); i++){
                         bottomRightGrid.getChildren().remove(pointHolder[pointNumber].peek());
                         pointHolder[pointNumber].pop();
@@ -295,7 +351,6 @@ public class Board extends BorderPane {
 
                 //as the top points draw in the same way as the grid there is no need to empty and refill here
                 else{
-                    topLeftGrid.getChildren().remove(labelArray[pointNumber]);
                     //if the grid just has a placeholder pip in it this is removed
                     if(numberOfPips-1 == 0){
                         topLeftGrid.getChildren().remove(pointHolder[pointNumber].peek());
@@ -323,7 +378,6 @@ public class Board extends BorderPane {
                 }
 
                 else{
-                    topRightGrid.getChildren().remove(labelArray[pointNumber]);
                     if(numberOfPips-1 == 0){
                         topRightGrid.getChildren().remove(pointHolder[pointNumber].peek());
                         pointHolder[pointNumber].pop();
@@ -343,12 +397,44 @@ public class Board extends BorderPane {
     private void removePip(int pointNumber, char pipColour){
         int numberOfPips = pointHolder[pointNumber].getPlayerPip();
 
+        if(pointNumber == 0 || pointNumber == 25){
+            pointHolder[pointNumber].pipCounterDecrementer();
+            if(numberOfPips == 2){
+                barGrid.getChildren().remove(labelArray[pointNumber]);
+            }
+
+            else if(numberOfPips > 2){
+                barGrid.getChildren().remove(labelArray[pointNumber]);
+
+                int labelText = numberOfPips - 1;
+                labelArray[pointNumber] = new Label( labelText + " Pips");
+                GridPane.setConstraints(labelArray[pointNumber], 0, pointHolder[pointNumber].getColumnIndex());
+                barGrid.getChildren().add(labelArray[pointNumber]);
+                //red is used as the color as its visible over both red and white pips
+                labelArray[pointNumber].setTextFill(Color.web("red"));
+            }
+
+            else{
+                barGrid.getChildren().remove(pointHolder[pointNumber].peek());
+                pointHolder[pointNumber].pop();
+                pointHolder[pointNumber].push(new Pip('P'));
+                GridPane.setConstraints(pointHolder[pointNumber].peek(), 0, pointHolder[pointNumber].getColumnIndex());
+                barGrid.getChildren().add(pointHolder[pointNumber].peek());
+            }
+        }
+
+
         if(pointNumber < 13 && pointNumber > 0){
 
             if(pointNumber < 7){
                 bottomRightGrid.getChildren().remove(labelArray[pointNumber]);
+                //removes label and does nothing if there will just be one pip on the last row
+                if(numberOfPips == 6){
+                    pointHolder[pointNumber].pipCounterDecrementer();
+                }
+
                 //label drawn the same as in addPip
-                if(numberOfPips > 5){
+                else if(numberOfPips > 5){
                     pointHolder[pointNumber].pipCounterDecrementer();
                     int labelText = (numberOfPips - 1) - 4;
 
@@ -386,7 +472,12 @@ public class Board extends BorderPane {
             //logic the same as above
             if(pointNumber > 6){
                 bottomLeftGrid.getChildren().remove(labelArray[pointNumber]);
-                if(numberOfPips > 5){
+                //removes label and does nothing if there will just be one pip on the last row
+                if(numberOfPips == 6){
+                    pointHolder[pointNumber].pipCounterDecrementer();
+                }
+
+                else if(numberOfPips > 5){
                     pointHolder[pointNumber].pipCounterDecrementer();
 
                     int labelText = (numberOfPips - 1) - 4;
@@ -425,8 +516,14 @@ public class Board extends BorderPane {
         if(pointNumber < 25 && pointNumber > 12){
 
             if(pointNumber < 19){
+                //removes label and does nothing if there will just be one pip on the last row
+                if(numberOfPips == 6){
+                    topLeftGrid.getChildren().remove(labelArray[pointNumber]);
+                    pointHolder[pointNumber].pipCounterDecrementer();
+                }
+
                 //label drawn the same as in the bottom grids
-                if(numberOfPips > 5){
+                else if(numberOfPips > 5){
                     topLeftGrid.getChildren().remove(labelArray[pointNumber]);
                     pointHolder[pointNumber].pipCounterDecrementer();
 
@@ -456,7 +553,13 @@ public class Board extends BorderPane {
 
             //logic the same as above
             if(pointNumber > 18){
-                if(numberOfPips > 5){
+                //removes label and does nothing if there will just be one pip on the last row
+                if(numberOfPips == 6){
+                    topRightGrid.getChildren().remove(labelArray[pointNumber]);
+                    pointHolder[pointNumber].pipCounterDecrementer();
+                }
+
+                else if(numberOfPips > 5){
                     topRightGrid.getChildren().remove(labelArray[pointNumber]);
                     pointHolder[pointNumber].pipCounterDecrementer();
 
@@ -489,7 +592,7 @@ public class Board extends BorderPane {
            method works by swapping each bottom point with the point directly above it
         *  the pips and 1 and 24 are swapped, then 2 and 23, all the way to 12 and 13
         *  */
-        int bottomPoint = 1, topPoint = 24;
+        int bottomPoint = 0, topPoint = 25;
         int bottomPipNumber, topPipNumber;
         char bottomPipColour, topPipColour;
 
@@ -521,9 +624,18 @@ public class Board extends BorderPane {
                 addPip(topPoint, bottomPipColour);
             }
         }
+
     }
 
     public int getNumberOfPips(int point){
         return pointHolder[point].getPlayerPip();
+    }
+
+    //used to perform hit action on a point
+    private void hitPip(int startingPointNumber, int finalPointNumber, char newPipColour){
+        addPip(0, pointHolder[finalPointNumber].getPipColour());
+        removePip(finalPointNumber, pointHolder[finalPointNumber].getPipColour());
+        addPip(finalPointNumber, newPipColour);
+        removePip(startingPointNumber, newPipColour);
     }
 }

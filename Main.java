@@ -269,25 +269,14 @@ public class Main extends Application{
                 }
             }
 
-            char pipColour;
-            if(player1.isTurn(turn, player1Tracker)){
-                pipColour = player1.getColour();
-            }
-
-            else if(player1.isTurn(turn, player2Tracker)){
-                pipColour = player2.getColour();
-            }
-
-            else{
-                pipColour = 'B';
-            }
-
-
             //if the second input was valid move is set the secondInt string as an int
             if (isInt2) move = Integer.parseInt(secondInt);
 
+            char pipColour;
+            pipColour =  board.pointHolder[point].getPipColour();
+
             //checks if the position exists
-            if(point > 24 || point < 0){
+            if(point > 25 || point < 0){
                 infoPanel.addText(textRow, "There is no point here.");
                 System.out.println("ran");
                 textRow++;
