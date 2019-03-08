@@ -148,7 +148,7 @@ public class Main extends Application{
 //        		AnnounceGame newgame = new AnnounceGame();
         		if(BackgammonAnnounceWinner.Player1 == 0 || BackgammonAnnounceWinner.Player2 == 0) {
         			System.out.println("Ola");
-        	        AnnounceGame.WinnerDialog(displayResult[result]);
+        	        newgame.WinnerDialog(displayResult[result]);
 
         		}
             }

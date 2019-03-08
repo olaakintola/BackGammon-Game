@@ -37,5 +37,59 @@ public class AnnounceGame {
 		popUp.setScene(scene);
 		popUp.showAndWait();	
 	} 
+	
+/*	public static void WinnerDialog(String text) {
+		//creates a popUp window
+		Stage popUp = new Stage();
+
+		// makes sure no changes are made in the Main window while this window is open
+		popUp.initModality(Modality.APPLICATION_MODAL);
+		popUp.setTitle("Winner:");
+		popUp.setMinWidth(400);
+		popUp.setHeight(200);
+
+		//label explains how the game works
+		Label displayLabel = new Label();
+		displayLabel.setText(text);
+		Button exitDisplay = new Button("Thanks for playing");
+		exitDisplay.setOnAction(e -> popUp.close());
+
+		//vbox stores label and is set in centre
+		VBox windowDisplay = new VBox();
+		windowDisplay.getChildren().addAll(displayLabel, exitDisplay);
+		windowDisplay.setAlignment(Pos.CENTER);
+		
+		Scene scene = new Scene(windowDisplay);
+		popUp.setScene(scene);
+		popUp.showAndWait();	
+	}*/
+
+	public void WinnerDialog(String text) {
+		// TODO Auto-generated method stub
+		
+		//creates a popUp window
+				Stage popUp = new Stage();
+
+				// makes sure no changes are made in the Main window while this window is open
+				popUp.initModality(Modality.APPLICATION_MODAL);
+				popUp.setTitle("Winner:");
+				popUp.setMinWidth(400);
+				popUp.setHeight(200);
+
+				//label explains how the game works
+				Label displayLabel = new Label();
+				displayLabel.setText(text);
+				Button exitDisplay = new Button("Thanks for playing");
+				exitDisplay.setOnAction(e -> popUp.close());
+
+				//vbox stores label and is set in centre
+				VBox windowDisplay = new VBox();
+				windowDisplay.getChildren().addAll(displayLabel, exitDisplay);
+				windowDisplay.setAlignment(Pos.CENTER);
+				
+				Scene scene = new Scene(windowDisplay);
+				popUp.setScene(scene);
+				popUp.showAndWait();	
+	}
 
 }
