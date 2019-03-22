@@ -699,11 +699,6 @@ import javafx.scene.paint.Color;
 
     }
 
-    public int getNumberOfPips(int point){
-        if(numbersInInit) return pointHolder[point].getPlayerPip();
-        else return pointHolder[pointHolder[point].getInverse()].getPlayerPip();
-    }
-
     //used to perform hit action on a point
     private void hitPip(int startingPointNumber, int finalPointNumber, char newPipColour){
         if(pointHolder[finalPointNumber].getPipColour() == 'B') addPip(0, pointHolder[finalPointNumber].getPipColour());
@@ -779,4 +774,12 @@ import javafx.scene.paint.Color;
         }
     }
 
+    public int getNumberOfPips(int point){
+        return pointHolder[point].getPlayerPip();
+    }
+
+    public int getNumberOfPipsMain(int point){
+        if(numbersInInit) return pointHolder[point].getPlayerPip();
+        else return pointHolder[pointHolder[point].getInverse()].getPlayerPip();
+    }
 }
