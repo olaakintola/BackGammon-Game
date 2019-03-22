@@ -190,7 +190,7 @@ public class Main extends Application{
             textRow++;
             textPanel.textField.setText(""); //empties input box after enter is pressed
 
-                });
+        });
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -691,12 +691,10 @@ public class Main extends Application{
             }
         }
 
-
-
-
+        
         System.out.println("k: "+k);
         for(; k>=0; k--){
-                System.out.println(potentialMoves[k]);
+            System.out.println(potentialMoves[k]);
         }
     }
 }
