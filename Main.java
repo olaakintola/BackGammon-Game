@@ -140,6 +140,10 @@ public class Main extends Application{
                 exit.exitProgram(primaryStage);
             }
 
+            else if (textPanel.getTextFieldText().equals("cheat")){
+                textPanel.cheatCommand(board);
+            }
+
             //ends player's turn
             else if (textPanel.getTextFieldText().equals("next")){
                 turn++;

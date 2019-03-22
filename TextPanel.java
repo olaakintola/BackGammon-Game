@@ -44,6 +44,11 @@ public class TextPanel extends BorderPane {
         setCenter(layout);
     }
 
+    public void cheatCommand(Board board){
+        board.cheatBoard();
+
+    }
+
     //returns the text in the text field
     public String getTextFieldText(){
         return textField.getText();

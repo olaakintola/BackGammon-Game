@@ -199,6 +199,90 @@ import javafx.scene.paint.Color;
         }
     }
 
+        // changes board display when "cheat" as a text command
+        public void cheatBoard(){
+
+            int temp = 6;
+
+
+            for(int i=0; i<6; i++){
+                //this adds a point to the array, its position in the array is the same as its position on the board
+                //i.e. the 6th point would be pointHolder[6]
+                pointHolder[temp] = new PointDataType();
+                //placeholder pip is pushed into the point and then displayed on the grid
+                pointHolder[temp].push(new Pip('P'));
+                GridPane.setConstraints(pointHolder[temp].peek(), i, 0);
+                bottomRightGrid.getChildren().add(pointHolder[temp].peek());
+                //each point has its own column index that is set here
+                pointHolder[temp].setColumnIndex(i);
+                temp--;
+            }
+
+
+            /* REMOVE ALL PIPS FROM ORIGINAL BOARD HERE */
+            for(int i=1;i<=24;i++){
+                int numPips = getNumberOfPips(i);
+                if(numPips>0){
+                    for(int j=0;j<numPips;j++){
+                        removePip(i,pointHolder[i].getPipColour());
+                    }
+                }
+            }
+
+            System.out.println("        " + getNumberOfPips(6));
+        /*
+            Adding white checkers to the bottom right grid to
+            the positions specified in Sprint 3 text
+         */
+
+            for (int i=0; i< 2; i++){
+                addPip(5, 'W');
+            }
+            System.out.println("    " + getNumberOfPips(5));
+
+            for (int i=0; i< 2; i++){
+                addPip(4, 'W');
+            }
+            System.out.println("    " + getNumberOfPips(4));
+            for (int i=0; i< 2; i++){
+                addPip(3, 'W');
+            }
+            System.out.println("    " + getNumberOfPips(3));
+            for (int i=0; i< 2; i++){
+                addPip(2, 'W');
+            }
+            System.out.println("    " + getNumberOfPips(2));
+            for (int i=0; i< 2; i++){
+                addPip(1, 'W');
+            }
+            System.out.println("    " + getNumberOfPips(1));
+        /*
+              Adding black checkers to the top right grid to the
+              positions specified in the sprint 3 notes
+         */
+            temp = 24;
+            for(int i=5; i>=0; i--){
+                pointHolder[temp] = new PointDataType();
+                pointHolder[temp].push(new Pip('P'));
+                GridPane.setConstraints(pointHolder[temp].peek(), i, 0);
+                topRightGrid.getChildren().add(pointHolder[temp].peek());
+                pointHolder[temp].setColumnIndex(i);
+                temp--;
+            }
+
+            for(int i=0; i<3; i++){
+                addPip(24, 'B');
+            }
+
+            for(int i=0; i<3; i++){
+                addPip(22, 'B');
+            }
+
+            for(int i=0; i<3; i++){
+                addPip(21, 'B');
+            }
+        }
+
     /*
     This method is used to move a pip from one point to another
     It takes in the pip's starting position, the amount it's moving by and its colour
