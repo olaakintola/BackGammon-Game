@@ -26,8 +26,17 @@ import javafx.scene.paint.Color;
         //26 are made, one for each point and bar position
         public PointDataType[] pointHolder = new PointDataType[26];
 
+        private GridPane topRightNumbers = new GridPane();
+        private GridPane topleftNumbers = new GridPane();
+        private GridPane bottomLeftNumbers = new GridPane();
+        private GridPane bottomRightNumbers = new GridPane();
+
+        private boolean numbersInInit;
     //label array is used when there's an excess number of pips on a point, 26 are made, one for each position
     private Label[] labelArray = new Label[26];
+
+    //label array used to put the numbers on the points
+    private Label[] numberLabelArray = new Label[24];
 
     public Board() {
         /*this stackpane is the root node of the scene
@@ -41,8 +50,9 @@ import javafx.scene.paint.Color;
         imgView.setFitWidth(864);
 
         boardInitialize(); //call to method to initialize the board state
+        drawNumbers();
 
-        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid);
+        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, topRightNumbers, topleftNumbers, bottomLeftNumbers, bottomRightNumbers);
         setCenter(sp);
     }
 
@@ -173,11 +183,20 @@ import javafx.scene.paint.Color;
         barGrid.getChildren().add(pointHolder[0].peek());
         pointHolder[0].setColumnIndex(1);
 
+        pointHolder[0].setInverse(25);
+        pointHolder[25].setInverse(0);
+
         topRightGrid.setGridLinesVisible(true);
         topLeftGrid.setGridLinesVisible(true);
         bottomLeftGrid.setGridLinesVisible(true);
         bottomRightGrid.setGridLinesVisible(true);
         barGrid.setGridLinesVisible(true);
+
+        int j=24;
+        for(int i=1; i<25; i++){
+            pointHolder[i].setInverse(j);
+            j--;
+        }
     }
 
     /*
@@ -189,25 +208,49 @@ import javafx.scene.paint.Color;
     public void move(int startingPosition, int moveAmount, char pipColour){
         int finalPos = startingPosition + moveAmount;
 
-        //checks if a hit will take place
-        if(pointHolder[finalPos].getPlayerPip() == 1 && pointHolder[finalPos].getPipColour() != pipColour){
-            hitPip(startingPosition, finalPos, pipColour);
+        if(numbersInInit){
+            //checks if a hit will take place
+            if(pointHolder[finalPos].getPlayerPip() == 1 && pointHolder[finalPos].getPipColour() != pipColour){
+                hitPip(startingPosition, finalPos, pipColour);
+            }
+
+            //if checks if the move will take pip off the board, if so only remove is called
+            else if(startingPosition + moveAmount < 0){
+                removePip(startingPosition, pipColour);
+            }
+
+            else if(finalPos == 0){
+                removePip(startingPosition, pipColour);
+            }
+
+            //otherwise remove and add pip methods are called
+            else{
+                removePip(startingPosition, pipColour);
+                addPip(finalPos, pipColour);
+            }
         }
 
-        //if checks if the move will take pip off the board, if so only remove is called
-        else if(startingPosition + moveAmount < 0){
-            removePip(startingPosition, pipColour);
-        }
-
-
-        else if(finalPos == 0){
-            removePip(startingPosition, pipColour);
-        }
-
-        //otherwise remove and add pip methods are called
         else{
-            removePip(startingPosition, pipColour);
-            addPip(finalPos, pipColour);
+            startingPosition = pointHolder[startingPosition].getInverse();
+            pipColour = pointHolder[startingPosition].getPipColour();
+            finalPos = startingPosition - moveAmount;
+
+            if(pointHolder[finalPos].getPlayerPip() == 1 && pointHolder[finalPos].getPipColour() != pipColour){
+                hitPip(startingPosition, finalPos, pipColour);
+            }
+
+            else if(startingPosition + moveAmount > 25){
+                removePip(startingPosition, pipColour);
+            }
+
+            else if(finalPos == 25){
+                removePip(startingPosition, pipColour);
+            }
+
+            else{
+                removePip(startingPosition, pipColour);
+                addPip(finalPos, pipColour);
+            }
         }
     }
 
@@ -588,54 +631,152 @@ import javafx.scene.paint.Color;
 
     //this flips the board view, used for changing player turns
     public void boardFlip(){
-        /*
-           method works by swapping each bottom point with the point directly above it
-        *  the pips and 1 and 24 are swapped, then 2 and 23, all the way to 12 and 13
-        *  */
-        int bottomPoint = 0, topPoint = 25;
-        int bottomPipNumber, topPipNumber;
-        char bottomPipColour, topPipColour;
+        removeNumbers();
 
-        for (; bottomPoint<topPoint; bottomPoint++, topPoint--){
-            //number of pips and colours of the two points are stored as these change as pips are removed / added
-            bottomPipNumber = pointHolder[bottomPoint].getPlayerPip();
-            bottomPipColour = pointHolder[bottomPoint].getPipColour();
+        if(numbersInInit){
+            topRightNumbers.setHgap(40);
+            topleftNumbers.setHgap(36);
+            bottomLeftNumbers.setHgap(32);
+            bottomRightNumbers.setHgap(32);
 
-            topPipNumber = pointHolder[topPoint].getPlayerPip();
-            topPipColour = pointHolder[topPoint].getPipColour();
-
-            //removes old pips from bottom point
-            for(int k=0; k<bottomPipNumber; k++){
-                removePip(bottomPoint, bottomPipColour);
+            int j=5;
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[j], i, 0);
+                topRightNumbers.getChildren().add(numberLabelArray[j]);
+                j--;
             }
 
-            //adds new pips to bottom point
-            for(int k=0; k< topPipNumber; k++){
-                addPip(bottomPoint, topPipColour);
+            j=11;
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[j], i, 0);
+                topleftNumbers.getChildren().add(numberLabelArray[j]);
+                j--;
             }
 
-            //remove old pips from top point
-            for(int k=0; k<topPipNumber; k++){
-                removePip(topPoint, topPipColour);
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[i+12], i, 0);
+                bottomLeftNumbers.getChildren().add(numberLabelArray[i+12]);
             }
 
-            //add new pips to top point
-            for(int k=0; k< bottomPipNumber; k++){
-                addPip(topPoint, bottomPipColour);
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[i+18], i, 0);
+                bottomRightNumbers.getChildren().add(numberLabelArray[i+18]);
             }
+            numbersInInit = false;
+        }
+
+        else{
+            topRightNumbers.setHgap(32);
+            topleftNumbers.setHgap(32);
+            bottomLeftNumbers.setHgap(36);
+            bottomRightNumbers.setHgap(40);
+
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[i+18], i, 0);
+                topRightNumbers.getChildren().add(numberLabelArray[i+18]);
+            }
+
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[i+12], i, 0);
+                topleftNumbers.getChildren().add(numberLabelArray[i+12]);
+            }
+
+            int j=11;
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[j], i, 0);
+                bottomLeftNumbers.getChildren().add(numberLabelArray[j]);
+                j--;
+            }
+
+            for(int i=0; i<6; i++){
+                GridPane.setConstraints(numberLabelArray[j], i, 0);
+                bottomRightNumbers.getChildren().add(numberLabelArray[j]);
+                j--;
+            }
+
+            numbersInInit = true;
         }
 
     }
 
     public int getNumberOfPips(int point){
-        return pointHolder[point].getPlayerPip();
+        if(numbersInInit) return pointHolder[point].getPlayerPip();
+        else return pointHolder[pointHolder[point].getInverse()].getPlayerPip();
     }
 
     //used to perform hit action on a point
     private void hitPip(int startingPointNumber, int finalPointNumber, char newPipColour){
-        addPip(0, pointHolder[finalPointNumber].getPipColour());
+        if(pointHolder[finalPointNumber].getPipColour() == 'B') addPip(0, pointHolder[finalPointNumber].getPipColour());
+        else addPip(25, pointHolder[finalPointNumber].getPipColour());
+
         removePip(finalPointNumber, pointHolder[finalPointNumber].getPipColour());
         addPip(finalPointNumber, newPipColour);
         removePip(startingPointNumber, newPipColour);
     }
+
+    public void drawNumbers(){
+        for (int i = 1; i<25; i++){
+            numberLabelArray[i-1] = new Label(Integer.toString(i));
+            numberLabelArray[i-1].setTextFill(Color.web("white"));
+        }
+
+        topRightNumbers.setPadding(new Insets(0, 80, 50, 497));
+        topRightNumbers.setHgap(32);
+
+        topleftNumbers.setHgap(32);
+        topleftNumbers.setPadding(new Insets(0, 0, 0, 113));
+
+        bottomLeftNumbers.setHgap(36);
+        bottomLeftNumbers.setPadding(new Insets(635, 0, 0, 113));
+
+        bottomRightNumbers.setHgap(40);
+        bottomRightNumbers.setPadding(new Insets(635, 0, 0, 497));
+
+        for(int i=0; i<6; i++){
+            GridPane.setConstraints(numberLabelArray[i+18], i, 0);
+            topRightNumbers.getChildren().add(numberLabelArray[i+18]);
+        }
+
+        for(int i=0; i<6; i++){
+            GridPane.setConstraints(numberLabelArray[i+12], i, 0);
+            topleftNumbers.getChildren().add(numberLabelArray[i+12]);
+        }
+
+        int j=11;
+        for(int i=0; i<6; i++){
+            GridPane.setConstraints(numberLabelArray[j], i, 0);
+            bottomLeftNumbers.getChildren().add(numberLabelArray[j]);
+            j--;
+        }
+
+        for(int i=0; i<6; i++){
+            GridPane.setConstraints(numberLabelArray[j], i, 0);
+            bottomRightNumbers.getChildren().add(numberLabelArray[j]);
+            j--;
+        }
+
+        numbersInInit = true;
+    }
+
+    public void removeNumbers(){
+        for(int i=0; i<6; i++){
+            topRightNumbers.getChildren().remove(numberLabelArray[i+18]);
+        }
+
+        for(int i=0; i<6; i++){
+            topleftNumbers.getChildren().remove(numberLabelArray[i+12]);
+        }
+
+        int j=11;
+        for(int i=0; i<6; i++){
+            bottomLeftNumbers.getChildren().remove(numberLabelArray[j]);
+            j--;
+        }
+
+        for(int i=0; i<6; i++){
+            bottomRightNumbers.getChildren().remove(numberLabelArray[j]);
+            j--;
+        }
+    }
+
 }

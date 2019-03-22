@@ -18,6 +18,7 @@ public class PointDataType {
     private int playerPipCounter;
     private int columnIndex; //each point has a column index for its respective grid that's stored here
     private char pipColour;
+    private int inverse;
 
     public PointDataType(){
         this(15);
@@ -94,5 +95,13 @@ public class PointDataType {
 
     public char getPipColour() {
         return pipColour;
+    }
+
+    public void setInverse(int inverse){
+        this.inverse = inverse;
+    }
+
+    public int getInverse() {
+        return inverse;
     }
 }
