@@ -166,6 +166,7 @@ public class Main extends Application{
 
             //rolls dice
             else if (textPanel.getTextFieldText().equals("roll")){
+                System.out.println("roll");
                 //if there are dice on board already they are removed
                 if(diceOnBoard == true){
                     borderPane.getChildren().removeAll(diceImgView1, diceImgView2);
@@ -241,7 +242,8 @@ public class Main extends Application{
         boolean isInt2 = false;
         boolean isBar = false;
 
-        if(input.charAt(0) == 'B' && input.charAt(1) == 'a' && input.charAt(2) == 'r' && input.charAt(3) == ' '){
+
+        if(input.length() > 3 && input.charAt(0) == 'B' && input.charAt(1) == 'a' && input.charAt(2) == 'r' && input.charAt(3) == ' '){
             point = 25;
             isInt = true;
             isBar = true;
@@ -416,20 +418,151 @@ public class Main extends Application{
         }
 
         if(pipColour == 'W'){
-            for(int i=1; i<25; i++){
+
+            //moving from bar
+            if(board.pointHolder[25].getPipColour() == 'W' && board.getNumberOfPipsMain(25) > 0){
+
+                int point = 25;
+                //dice1 safe
+                if(point-dice1 > 0 && (board.getNumberOfPipsMain(point-dice1) == 0 || board.pointHolder[point-dice1].getPipColour() == 'W')) {
+                    int currentMove = point - dice1;
+
+                    if (currentMove - dice2 > 0 && (board.getNumberOfPipsMain(currentMove - dice2) == 0 || board.pointHolder[currentMove - dice2].getPipColour() == 'W')) {
+                        potentialMoves[k] = "Bar-" + currentMove + " " + currentMove + "-" + (currentMove - dice2);
+                        k++;
+                    }
+
+                    if (currentMove - dice2 > 0 && board.pointHolder[currentMove - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice2) == 1) {
+                        potentialMoves[k] = "Bar-" + currentMove + " " + currentMove + "-" + (currentMove - dice2) + "*";
+                        k++;
+                    }
+
+                    for (int j = 1; j < 25; j++) {
+                        if (board.pointHolder[j].getPipColour() == 'W' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j - dice2 > 0 && (board.getNumberOfPipsMain(j - dice2) == 0 || board.pointHolder[j - dice2].getPipColour() == 'W')) {
+                                potentialMoves[k] = "Bar-" + currentMove + " " + j + "-" + (j - dice2);
+                                k++;
+                            }
+
+                            if (j - dice2 > 0 && board.pointHolder[j - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice2) == 1) {
+                                potentialMoves[k] = "Bar-" + currentMove + " " + j + "-" + (j - dice2) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+                //dice1 hit
+                if(point - dice1 > 0 && board.pointHolder[point-dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(point - dice1) == 1){
+                    int currentMove = point - dice1;
+
+                    if(currentMove-dice2>0 && (board.getNumberOfPipsMain(currentMove-dice2) == 0 || board.pointHolder[currentMove-dice2].getPipColour() == 'W') ) {
+                        potentialMoves[k] = "Bar*-"+currentMove+"* "+currentMove+"-"+(currentMove-dice2);
+                        k++;
+                    }
+
+                    if(currentMove-dice2>0 && board.pointHolder[currentMove - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice2) == 1 ) {
+                        potentialMoves[k] = "Bar*-"+currentMove+"* "+currentMove+"-"+(currentMove-dice2)+"*";
+                        k++;
+                    }
+
+                    for(int j=1; j<25; j++){
+
+                        if(board.pointHolder[j].getPipColour() == 'W' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j - dice2 > 0 && (board.getNumberOfPipsMain(j - dice2) == 0 || board.pointHolder[j - dice2].getPipColour() == 'W')) {
+                                potentialMoves[k] = "Bar*-" + currentMove + "* " + j + "-" + (j - dice2);
+                                k++;
+                            }
+
+                            if (j - dice2 > 0 && board.pointHolder[j - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice2) == 1) {
+                                potentialMoves[k] = "Bar*-" + currentMove + "* " + j + "-" + (j - dice2) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+                //dice2 safe
+                if(point-dice2 > 0 && (board.getNumberOfPipsMain(point-dice2) == 0 || board.pointHolder[point-dice2].getPipColour() == 'W')){
+                    int currentMove = point-dice2;
+
+                    if(currentMove-dice1>0 && (board.getNumberOfPipsMain(currentMove-dice1) == 0 || board.pointHolder[currentMove-dice1].getPipColour() == 'W') ) {
+                        potentialMoves[k] = "Bar-"+currentMove+" "+currentMove+"-"+(currentMove-dice1);
+                        k++;
+                    }
+
+                    if(currentMove-dice1>0 && board.pointHolder[currentMove - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice1) == 1 ) {
+                        potentialMoves[k] = "Bar-"+currentMove+" "+currentMove+"-"+(currentMove-dice1)+"*";
+                        k++;
+                    }
+
+                    for(int j=1; j<25; j++){
+
+                        if(board.pointHolder[j].getPipColour() == 'W' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j - dice1 > 0 && (board.getNumberOfPipsMain(j - dice1) == 0 || board.pointHolder[j - dice1].getPipColour() == 'W')) {
+                                potentialMoves[k] = "Bar-" + currentMove + " " + j + "-" + (j - dice1);
+                                k++;
+                            }
+
+                            if (j - dice1 > 0 && board.pointHolder[j - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice1) == 1) {
+                                potentialMoves[k] = "Bar-" + currentMove + " " + j + "-" + (j - dice1) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+                //dice2 hit
+                if(point -   dice2 > 0 && board.pointHolder[point-dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(point - dice2) == 1){
+                    int currentMove = point-dice2;
+
+                    if(currentMove-dice1>0 && (board.getNumberOfPipsMain(currentMove-dice1) == 0 || board.pointHolder[currentMove-dice1].getPipColour() == 'W') ) {
+                        potentialMoves[k] = "Bar*-"+currentMove+"* "+currentMove+"-"+(currentMove-dice1);
+                        k++;
+                    }
+
+                    if(currentMove-dice1>0 && board.pointHolder[currentMove - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice1) == 1 ) {
+                        potentialMoves[k] = "Bar*-"+currentMove+"* "+currentMove+"-"+(currentMove-dice1)+"*";
+                        k++;
+                    }
+
+                    for(int j=1; j<25; j++){
+
+                        if(board.pointHolder[j].getPipColour() == 'W' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j - dice1 >0 && (board.getNumberOfPipsMain(j - dice1) == 0 || board.pointHolder[j - dice1].getPipColour() == 'W')) {
+                                potentialMoves[k] = "Bar*-" + currentMove + "* " + j + "-" + (j - dice1);
+                                k++;
+                            }
+
+                            if (j - dice1 >0 && board.pointHolder[j - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice1) == 1) {
+                                potentialMoves[k] = "Bar*-" + currentMove + "* " + j + "-" + (j - dice1) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            for(int i=24; i>0; i--){
+                System.out.println("Current move1: " + (i-dice1));
+                System.out.println("Current move2: " + (i-dice2));
                 System.out.println("i: "+i+ "   number of pips: "+ board.getNumberOfPipsMain(i)+"   pip colour: "+board.pointHolder[i].getPipColour());
 
                 if(board.pointHolder[i].getPipColour() == 'W' && board.getNumberOfPipsMain(i) > 0){
                     //dice1 safe spot
-                    if(i-dice1 > 0 && (board.getNumberOfPipsMain(i-dice1) == 0 || board.pointHolder[i+dice1].getPipColour() == 'W')){
+                    if(i-dice1 > 0 && (board.getNumberOfPipsMain(i-dice1) == 0 || board.pointHolder[i-dice1].getPipColour() == 'W')){
                         int currentMove = i-dice1;
 
-                        if(currentMove-dice2>0 && (board.getNumberOfPipsMain(currentMove+dice2) == 0 || board.pointHolder[currentMove+dice2].getPipColour() == 'W') ) {
+                        if(currentMove-dice2>0 && (board.getNumberOfPipsMain(currentMove-dice2) == 0 || board.pointHolder[currentMove-dice2].getPipColour() == 'W') ) {
                             potentialMoves[k] = i+"-"+currentMove+" "+currentMove+"-"+(currentMove-dice2);
                             k++;
                         }
 
-                        if(currentMove+dice2>0 && board.pointHolder[currentMove - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice2) == 1 ) {
+                        if(currentMove-dice2>0 && board.pointHolder[currentMove - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice2) == 1 ) {
                             potentialMoves[k] = i+"-"+currentMove+" "+currentMove+"-"+(currentMove-dice2)+"*";
                             k++;
                         }
@@ -453,7 +586,7 @@ public class Main extends Application{
 
                     //dice1 hit
                     if(i - dice1 > 0 && board.pointHolder[i-dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(i - dice1) == 1){
-                        int currentMove = dice1 - i;
+                        int currentMove = i-dice1;
 
                         if(currentMove-dice2>0 && (board.getNumberOfPipsMain(currentMove-dice2) == 0 || board.pointHolder[currentMove-dice2].getPipColour() == 'W') ) {
                             potentialMoves[k] = i+"-"+currentMove+"* "+currentMove+"-"+(currentMove-dice2);
@@ -469,12 +602,12 @@ public class Main extends Application{
 
                             if(board.pointHolder[j].getPipColour() == 'W' && board.getNumberOfPipsMain(j) > 0) {
 
-                                if (j + dice2 > 0 && (board.getNumberOfPipsMain(j - dice2) == 0 || board.pointHolder[j - dice2].getPipColour() == 'W')) {
+                                if (j - dice2 > 0 && (board.getNumberOfPipsMain(j - dice2) == 0 || board.pointHolder[j - dice2].getPipColour() == 'W')) {
                                     potentialMoves[k] = i + "-" + currentMove + "* " + j + "-" + (j - dice2);
                                     k++;
                                 }
 
-                                if (j + dice2 > 0 && board.pointHolder[j - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice2) == 1) {
+                                if (j - dice2 > 0 && board.pointHolder[j - dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice2) == 1) {
                                     potentialMoves[k] = i + "-" + currentMove + "* " + j + "-" + (j - dice2) + "*";
                                     k++;
                                 }
@@ -484,15 +617,15 @@ public class Main extends Application{
                     }
 
                     //dice2 safe
-                    if(i+dice2 < 0 && (board.getNumberOfPipsMain(i-dice2) == 0 || board.pointHolder[i-dice2].getPipColour() == 'W')){
+                    if(i-dice2 > 0 && (board.getNumberOfPipsMain(i-dice2) == 0 || board.pointHolder[i-dice2].getPipColour() == 'W')){
                         int currentMove = i-dice2;
 
-                        if(currentMove+dice1>0 && (board.getNumberOfPipsMain(currentMove+dice1) == 0 || board.pointHolder[currentMove-dice1].getPipColour() == 'W') ) {
+                        if(currentMove-dice1>0 && (board.getNumberOfPipsMain(currentMove-dice1) == 0 || board.pointHolder[currentMove-dice1].getPipColour() == 'W') ) {
                             potentialMoves[k] = i+"-"+currentMove+" "+currentMove+"-"+(currentMove-dice1);
                             k++;
                         }
 
-                        if(currentMove+dice1<0 && board.pointHolder[currentMove - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice1) == 1 ) {
+                        if(currentMove-dice1>0 && board.pointHolder[currentMove - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice1) == 1 ) {
                             potentialMoves[k] = i+"-"+currentMove+" "+currentMove+"-"+(currentMove-dice1)+"*";
                             k++;
                         }
@@ -501,12 +634,12 @@ public class Main extends Application{
 
                             if(board.pointHolder[j].getPipColour() == 'W' && board.getNumberOfPipsMain(j) > 0) {
 
-                                if (j + dice1 > 0 && (board.getNumberOfPipsMain(j - dice1) == 0 || board.pointHolder[j - dice1].getPipColour() == 'W')) {
+                                if (j - dice1 > 0 && (board.getNumberOfPipsMain(j - dice1) == 0 || board.pointHolder[j - dice1].getPipColour() == 'W')) {
                                     potentialMoves[k] = i + "-" + currentMove + " " + j + "-" + (j - dice1);
                                     k++;
                                 }
 
-                                if (j - dice1 > 0 && board.pointHolder[j - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(i - dice1) == 1) {
+                                if (j - dice1 > 0 && board.pointHolder[j - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice1) == 1) {
                                     potentialMoves[k] = i + "-" + currentMove + " " + j + "-" + (j - dice1) + "*";
                                     k++;
                                 }
@@ -515,16 +648,16 @@ public class Main extends Application{
                     }
 
                     //dice2 hit
-                    if(i + dice2 < 25 && board.pointHolder[i+dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(i + dice2) == 1){
-                        int currentMove = dice2 + i;
+                    if(i -   dice2 > 0 && board.pointHolder[i-dice2].getPipColour() == 'B' && board.getNumberOfPipsMain(i - dice2) == 1){
+                        int currentMove = i-dice2;
 
-                        if(currentMove+dice1<25 && (board.getNumberOfPipsMain(currentMove+dice1) == 0 || board.pointHolder[currentMove+dice1].getPipColour() == 'W') ) {
-                            potentialMoves[k] = i+"-"+currentMove+"* "+currentMove+"-"+(currentMove+dice1);
+                        if(currentMove-dice1>0 && (board.getNumberOfPipsMain(currentMove-dice1) == 0 || board.pointHolder[currentMove-dice1].getPipColour() == 'W') ) {
+                            potentialMoves[k] = i+"-"+currentMove+"* "+currentMove+"-"+(currentMove-dice1);
                             k++;
                         }
 
-                        if(currentMove+dice1<25 && board.pointHolder[currentMove + dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove + dice1) == 1 ) {
-                            potentialMoves[k] = i+"-"+currentMove+"* "+currentMove+"-"+(currentMove+dice1)+"*";
+                        if(currentMove-dice1>0 && board.pointHolder[currentMove - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(currentMove - dice1) == 1 ) {
+                            potentialMoves[k] = i+"-"+currentMove+"* "+currentMove+"-"+(currentMove-dice1)+"*";
                             k++;
                         }
 
@@ -532,13 +665,13 @@ public class Main extends Application{
 
                             if(board.pointHolder[j].getPipColour() == 'W' && board.getNumberOfPipsMain(j) > 0) {
 
-                                if (j + dice1 < 25 && (board.getNumberOfPipsMain(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'W')) {
-                                    potentialMoves[k] = i + "-" + currentMove + "* " + j + "-" + (j + dice1);
+                                if (j - dice1 >0 && (board.getNumberOfPipsMain(j - dice1) == 0 || board.pointHolder[j - dice1].getPipColour() == 'W')) {
+                                    potentialMoves[k] = i + "-" + currentMove + "* " + j + "-" + (j - dice1);
                                     k++;
                                 }
 
-                                if (j + dice1 < 25 && board.pointHolder[j + dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(j + dice1) == 1) {
-                                    potentialMoves[k] = i + "-" + currentMove + "* " + j + "-" + (j + dice1) + "*";
+                                if (j - dice1 >0 && board.pointHolder[j - dice1].getPipColour() == 'B' && board.getNumberOfPipsMain(j - dice1) == 1) {
+                                    potentialMoves[k] = i + "-" + currentMove + "* " + j + "-" + (j - dice1) + "*";
                                     k++;
                                 }
                             }
@@ -548,24 +681,143 @@ public class Main extends Application{
 
                 }
             }
-
-            //moving from bar
-            if(board.pointHolder[25].getPipColour() == 'W' && board.getNumberOfPipsMain(25) > 0){
-
-                //dice1 safe
-                //if(25)
-
-                //dice1 hit
-
-                //dice2 safe
-
-                //dice2 hit
-
-
-            }
         }
 
         if(pipColour == 'B'){
+            //moving from bar
+            System.out.println("Bar colour: "+board.pointHolder[0].getPipColour());
+            System.out.println("Bar pip number: "+ board.getNumberOfPipsMain(25));
+
+            if(board.pointHolder[0].getPipColour() == 'B' && board.getNumberOfPipsMain(25) > 0){
+                System.out.println("Bar is active");
+
+                int point = 0;
+
+                if(point+dice1 < 25 && (board.getNumberOfPipsMain(point+dice1) == 0 || board.pointHolder[point+dice1].getPipColour() == 'B')){
+                    int currentMove = point+dice1;
+
+                    if(currentMove+dice2<25 && (board.getNumberOfPipsMain(currentMove+dice2) == 0 || board.pointHolder[currentMove+dice2].getPipColour() == 'B') ) {
+                        potentialMoves[k] = "Bar-"+board.pointHolder[currentMove].getInverse()+" "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice2].getInverse());
+                        k++;
+                    }
+
+                    if(currentMove+dice2<25 && board.pointHolder[currentMove + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice2) == 1 ) {
+                        potentialMoves[k] = "Bar-"+board.pointHolder[currentMove].getInverse()+" "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice2].getInverse()+"*");
+                        k++;
+                    }
+
+                    for(int j=1; j<25; j++){
+
+                        if(board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j + dice2 < 25 && (board.getNumberOfPipsMain(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
+                                potentialMoves[k] = "Bar-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse());
+                                k++;
+                            }
+
+                            if (j + dice2 < 25 && board.pointHolder[j + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice2) == 1) {
+                                potentialMoves[k] = "Bar-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j+dice2].getInverse()) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+                //dice1 hit
+                if(point+dice1 < 25 && board.pointHolder[point + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(point + dice1) == 1){
+                    int currentMove = point + dice1;
+
+                    if(currentMove+dice2<25 && (board.getNumberOfPipsMain(currentMove+dice2) == 0 || board.pointHolder[currentMove+dice2].getPipColour() == 'B') ) {
+                        potentialMoves[k] = "Bar*-"+board.pointHolder[currentMove].getInverse()+"* "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice2].getInverse());
+                        k++;
+                    }
+
+                    if(currentMove+dice2<25 && board.pointHolder[currentMove + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice2) == 1 ) {
+                        potentialMoves[k] = "Bar*-"+board.pointHolder[currentMove].getInverse()+"* "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice2].getInverse()+"*");
+                        k++;
+                    }
+
+                    for(int j=1; j<25; j++){
+
+                        if(board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j + dice2 < 25 && (board.getNumberOfPipsMain(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
+                                potentialMoves[k] = "Bar*-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse());
+                                k++;
+                            }
+
+                            if (j + dice2 < 25 && board.pointHolder[j + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice2) == 1) {
+                                potentialMoves[k] = "Bar*-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j+dice2].getInverse()) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+
+                //dice2 safe
+                if(point+dice2 < 25 && (board.getNumberOfPipsMain(point+dice2) == 0 || board.pointHolder[point+dice2].getPipColour() == 'B')){
+                    int currentMove = point+dice2;
+
+                    if(currentMove+dice1<25 && (board.getNumberOfPipsMain(currentMove+dice1) == 0 || board.pointHolder[currentMove+dice1].getPipColour() == 'B') ) {
+                        potentialMoves[k] = "Bar-"+board.pointHolder[currentMove].getInverse()+" "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice1].getInverse());
+                        k++;
+                    }
+
+                    if(currentMove+dice1<25 && board.pointHolder[currentMove + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice1) == 1 ) {
+                        potentialMoves[k] ="Bar-"+board.pointHolder[currentMove].getInverse()+" "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice1].getInverse()+"*");
+                        k++;
+                    }
+
+                    for(int j=1; j<25; j++){
+
+                        if(board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j + dice1 < 25 && (board.getNumberOfPipsMain(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
+                                potentialMoves[k] ="Bar-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse());
+                                k++;
+                            }
+
+                            if (j + dice1 < 25 && board.pointHolder[j + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice1) == 1) {
+                                potentialMoves[k] ="Bar-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j+dice1].getInverse()) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+                //dice2 hit
+                if(point+dice2 < 25 && board.pointHolder[point + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(point + dice2) == 1){
+                    int currentMove = point + dice2;
+
+                    if(currentMove+dice1<25 && (board.getNumberOfPipsMain(currentMove+dice1) == 0 || board.pointHolder[currentMove+dice1].getPipColour() == 'B') ) {
+                        potentialMoves[k] ="Bar*-"+board.pointHolder[currentMove].getInverse()+"* "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice1].getInverse());
+                        k++;
+                    }
+
+                    if(currentMove+dice1<25 && board.pointHolder[currentMove + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice1) == 1 ) {
+                        potentialMoves[k] ="Bar*-"+board.pointHolder[currentMove].getInverse()+"* "+board.pointHolder[currentMove].getInverse()+"-"+(board.pointHolder[currentMove+dice1].getInverse()+"*");
+                        k++;
+                    }
+
+                    for(int j=1; j<25; j++){
+
+                        if(board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0) {
+
+                            if (j + dice1 < 25 && (board.getNumberOfPipsMain(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
+                                potentialMoves[k] ="Bar*-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse());
+                                k++;
+                            }
+
+                            if (j + dice1 < 25 && board.pointHolder[j + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice1) == 1) {
+                                potentialMoves[k] ="Bar*-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j+dice1].getInverse()) + "*";
+                                k++;
+                            }
+                        }
+                    }
+                }
+            }
+
             for(int i=1; i<25; i++){
                 if(board.pointHolder[i].getPipColour() == 'B' && board.getNumberOfPipsMain(i) > 0){
 
@@ -698,7 +950,7 @@ public class Main extends Application{
 
         System.out.println("reach");
         System.out.println("k: "+k);
-        for(; k>=0; k--){
+        for(k=k-1; k>=0; k--){
             System.out.println(potentialMoves[k]);
         }
     }
