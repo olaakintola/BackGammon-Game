@@ -190,15 +190,16 @@ public class Main extends Application{
                 // Team Eniac, I just added this line to announce the winner of the game
                 BackgammonAnnounceWinner newGame = new BackgammonAnnounceWinner();
                 
-                do {
+/*                do {
                 	System.out.println("Game is On");
                       			// Code to play game should be here
                 	}while(board.PipCount());  //(player1 != 0 || player2 != 0);
-        /**
+*/        /**
          *  * I should be able to call this three lines at the end of the game or after every move.
          *  * Maybe I should initially try after every move and then make it only at the end of the
          * game when I get it working.
         * */
+                if(board.PipCount()) {
                 String name = " ";
                 int result = newGame.winner();
                 if(result == 1) {
@@ -217,7 +218,7 @@ public class Main extends Application{
                 		}
                 	}
                 newgame.WinnerDialog(name);
-                
+                }
             }
 
             //prints user input to infoPanel, if statement is used for formatting when asking for player names
