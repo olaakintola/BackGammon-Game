@@ -238,7 +238,10 @@ import javafx.scene.paint.Color;
             for (int i=0; i< 2; i++){
                 addPip(5, 'W');
             }
-            System.out.println("    " + getNumberOfPips(5));
+
+            for(int i=0;i<3;i++){
+                addPip(25, 'W');
+            }
 
             for (int i=0; i< 2; i++){
                 addPip(4, 'W');
@@ -255,7 +258,7 @@ import javafx.scene.paint.Color;
             for (int i=0; i< 2; i++){
                 addPip(1, 'W');
             }
-            System.out.println("    " + getNumberOfPips(1));
+
         /*
               Adding black checkers to the top right grid to the
               positions specified in the sprint 3 notes
@@ -268,6 +271,11 @@ import javafx.scene.paint.Color;
                 topRightGrid.getChildren().add(pointHolder[temp].peek());
                 pointHolder[temp].setColumnIndex(i);
                 temp--;
+            }
+
+
+            for(int i=0;i<3;i++){
+                addPip(0, 'B');
             }
 
             for(int i=0; i<3; i++){
