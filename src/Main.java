@@ -436,6 +436,12 @@ public class Main extends Application{
         rollTwo.play();
         diceOnBoard = true;
     }
+    // method to be called when there are no possible moves for the player
+    public void noPossibleMoves(){
+        infoPanel.addText(textRow, "No moves available");
+        turn++;
+        board.boardFlip();
+    }
 
     public void calculateMoves(int dice1, int dice2){
         String[] potentialMoves = new String[500];
@@ -985,6 +991,10 @@ public class Main extends Application{
         System.out.println("k: "+k);
         for(k=k-1; k>=0; k--){
             System.out.println(potentialMoves[k]);
+        }
+
+        if(k==0){
+            noPossibleMoves();
         }
     }
 }
