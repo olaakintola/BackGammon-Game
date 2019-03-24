@@ -866,4 +866,27 @@ import javafx.scene.paint.Color;
         if(numbersInInit) return pointHolder[point].getPlayerPip();
         else return pointHolder[pointHolder[point].getInverse()].getPlayerPip();
     }
+    
+	public static int totalWhitePip = 0;
+	public static int totalBlackPip = 0;
+	
+    public boolean PipCount() {
+    	// I should make both variables actually global variables so that they can
+    	// be access from anywhere in this file
+/*    	int totalWhitePip = 0;
+    	int totalBlackPip = 0;*/
+    	for(int i = 1; i <= 24; i++) {
+    		if(pointHolder[i].getPipColour() == 'W') {
+    			totalWhitePip += pointHolder[i].getPlayerPip();
+    		} 
+    		if(pointHolder[i].getPipColour() == 'B') {
+    			totalBlackPip += pointHolder[i].getPlayerPip();
+    		}	
+    	}
+    	
+    	if(totalBlackPip == 0 || totalWhitePip== 0)
+    		return false;
+    	else 
+    		return true;
+    }
 }

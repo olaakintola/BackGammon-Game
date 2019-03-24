@@ -25,11 +25,12 @@ public class AnnounceGame {
 				"The object of the game is to move your pieces along the board's \n"
 				+ "points and off the board before your opponent does.\n"
 				+ "Your pieces move counterclockwise from the upper right\n");
-		Button exitDisplay = new Button("Close the Window to Start Game");
+		Button exitDisplay = new Button("Start Game");
 		exitDisplay.setOnAction(e -> popUp.close());
 
 		//vbox stores label and is set in centre
 		VBox windowDisplay = new VBox();
+		windowDisplay.setStyle("-fx-background-color:Wheat"); //background colour is set
 		windowDisplay.getChildren().addAll(displayLabel, exitDisplay);
 		windowDisplay.setAlignment(Pos.CENTER);
 		

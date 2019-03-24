@@ -187,6 +187,39 @@ public class Main extends Application{
             //if none of the other functions are being called it is assumed a move action is called
             else{
                 moveInput(textPanel.getTextFieldText());
+                
+                // Team Eniac, I just added this line to announce the winner of the game
+                BackgammonAnnounceWinner newGame = new BackgammonAnnounceWinner();
+                
+/*                do {
+                	System.out.println("Game is On");
+                      			// Code to play game should be here
+                	}while(board.PipCount());  //(player1 != 0 || player2 != 0);
+*/        /**
+         *  * I should be able to call this three lines at the end of the game or after every move.
+         *  * Maybe I should initially try after every move and then make it only at the end of the
+         * game when I get it working.
+        * */
+                if(board.PipCount()) {
+                String name = " ";
+                int result = newGame.winner();
+                if(result == 1) {
+                	if(player1.getColour() == 'B') {
+                		name = player1.getPlayerName();
+                		}
+                	else
+                		name = player2.getPlayerName();
+                	}
+                else {
+                	if(player1.getColour() == 'W') {
+                		name = player1.getPlayerName();
+                		}
+                	else {
+                		name = player2.getPlayerName();
+                		}
+                	}
+                newgame.WinnerDialog(name);
+                }
             }
 
             //prints user input to infoPanel, if statement is used for formatting when asking for player names
