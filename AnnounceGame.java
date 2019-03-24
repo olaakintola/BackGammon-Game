@@ -80,7 +80,7 @@ public class AnnounceGame {
 				//label explains how the game works
 				Label displayLabel = new Label();
 				displayLabel.setText(text);
-				Button exitDisplay = new Button("Thanks for playing");
+				Button exitDisplay = new Button("Congratulations, You Won");
 				exitDisplay.setOnAction(e -> popUp.close());
 
 				//vbox stores label and is set in centre
