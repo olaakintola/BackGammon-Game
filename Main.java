@@ -8,7 +8,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -1243,6 +1245,36 @@ public class Main extends Application{
             doublesToMove=false;
             doubleCounter=0;
         }
+
+        AnnounceGame menuOption = new AnnounceGame();
+
+        InformationPanel displayMenu = new InformationPanel();
+//        displayMenu.printMenu(potentialMoves);
+
+        String[] alphabets = new String[26];
+        for (int i = 0; i < 26; i++) {
+            alphabets[i] =  (char)('A' + i) + "";
+        }
+
+        System.out.println("reach");
+        System.out.println("k: "+k);
+        for(k=k-1; k>=0; k--){
+
+            System.out.println(potentialMoves[k]);
+
+
+        }
+
+        String[] finalStringArray = new String[26];
+        for(int i=0; i<26;i++) {
+            finalStringArray[i] = alphabets[i] +" "+ potentialMoves[i];
+        }
+
+        ChoiceBox<String> choiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
+                "one", "two", "three"));
+        choiceBox.setPrefWidth(500);
+
+        menuOption.OptionsMenu(finalStringArray);
     }
 }
 

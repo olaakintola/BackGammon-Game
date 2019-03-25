@@ -186,12 +186,6 @@ import javafx.scene.paint.Color;
         pointHolder[0].setInverse(25);
         pointHolder[25].setInverse(0);
 
-        topRightGrid.setGridLinesVisible(true);
-        topLeftGrid.setGridLinesVisible(true);
-        bottomLeftGrid.setGridLinesVisible(true);
-        bottomRightGrid.setGridLinesVisible(true);
-        barGrid.setGridLinesVisible(true);
-
         int j=24;
         for(int i=1; i<25; i++){
             pointHolder[i].setInverse(j);

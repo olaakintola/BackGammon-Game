@@ -1,6 +1,7 @@
 /*
 * Written by: Ola
 * */
+import javafx.collections.FXCollections;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
@@ -91,6 +92,43 @@ public class AnnounceGame {
 				Scene scene = new Scene(windowDisplay);
 				popUp.setScene(scene);
 				popUp.showAndWait();	
+	}
+
+	public void OptionsMenu(String[] finalStringArray) {
+		// TODO Auto-generated method stub
+
+		// TODO Auto-generated method stub
+
+		//creates a popUp window
+		Stage popUp = new Stage();
+
+		// makes sure no changes are made in the Main window while this window is open
+		popUp.initModality(Modality.APPLICATION_MODAL);
+		popUp.setTitle("Options Menu");
+		popUp.setMinWidth(400);
+		popUp.setHeight(200);
+
+		//label explains how the game works
+		Label displayLabel = new Label();
+
+		ChoiceBox<String> choiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
+				finalStringArray));
+		//	       borderPane.setRight(choiceBox);
+		choiceBox.setPrefWidth(500);
+
+
+		//		displayLabel.setText(text);
+		Button exitDisplay = new Button("Congratulations, You Won");
+		exitDisplay.setOnAction(e -> popUp.close());
+
+		//vbox stores label and is set in centre
+		VBox windowDisplay = new VBox();
+		windowDisplay.getChildren().addAll(choiceBox);
+		windowDisplay.setAlignment(Pos.CENTER);
+
+		Scene scene = new Scene(windowDisplay);
+		popUp.setScene(scene);
+		popUp.showAndWait();
 	}
 
 }
