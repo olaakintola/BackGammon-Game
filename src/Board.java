@@ -205,18 +205,6 @@ import javafx.scene.paint.Color;
             int temp = 6;
 
 
-            for(int i=0; i<6; i++){
-                //this adds a point to the array, its position in the array is the same as its position on the board
-                //i.e. the 6th point would be pointHolder[6]
-                pointHolder[temp] = new PointDataType();
-                //placeholder pip is pushed into the point and then displayed on the grid
-                pointHolder[temp].push(new Pip('P'));
-                GridPane.setConstraints(pointHolder[temp].peek(), i, 0);
-                bottomRightGrid.getChildren().add(pointHolder[temp].peek());
-                //each point has its own column index that is set here
-                pointHolder[temp].setColumnIndex(i);
-                temp--;
-            }
 
 
             /* REMOVE ALL PIPS FROM ORIGINAL BOARD HERE */
@@ -263,15 +251,6 @@ import javafx.scene.paint.Color;
               Adding black checkers to the top right grid to the
               positions specified in the sprint 3 notes
          */
-            temp = 24;
-            for(int i=5; i>=0; i--){
-                pointHolder[temp] = new PointDataType();
-                pointHolder[temp].push(new Pip('P'));
-                GridPane.setConstraints(pointHolder[temp].peek(), i, 0);
-                topRightGrid.getChildren().add(pointHolder[temp].peek());
-                pointHolder[temp].setColumnIndex(i);
-                temp--;
-            }
 
 
             for(int i=0;i<3;i++){
