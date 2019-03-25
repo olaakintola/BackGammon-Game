@@ -247,7 +247,7 @@ import javafx.scene.paint.Color;
               Adding black checkers to the top right grid to the
               positions specified in the sprint 3 notes
          */
-        
+
             for(int i=0;i<3;i++){
                 addPip(0, 'B');
             }

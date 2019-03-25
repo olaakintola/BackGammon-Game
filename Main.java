@@ -444,10 +444,27 @@ public class Main extends Application{
     }
     // method to be called when there are no possible moves for the player
     public void noPossibleMoves(){
+        System.out.println("no moves available");
         infoPanel.addText(textRow, "No moves available");
+        textRow++;
         turn++;
         board.boardFlip();
+        infoPanel.addText(textRow, "Type roll to roll the dice.");
+        if (player1.isTurn(turn, player1Tracker)) {
+            String pipColour;
+            if (player1.getColour() == 'B') pipColour = "Black";
+            else pipColour = "White";
+            infoPanel.addText(textRow, "It is " + player1.getPlayerName() + "'s turn. Their colour is " + pipColour);
+        }
+        else{
+            String pipColour;
+            if (player2.getColour() == 'B') pipColour = "Black";
+            else pipColour = "White";
+            infoPanel.addText(textRow, "It is " + player2.getPlayerName() + "'s turn. Their colour is " + pipColour);
+        }
+        textRow++;
     }
+
 
     public void calculateMoves(int dice1, int dice2) {
         String[] potentialMoves = new String[500];
