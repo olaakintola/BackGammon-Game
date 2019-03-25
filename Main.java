@@ -81,11 +81,6 @@ public class Main extends Application{
         infoPanel.addText(0, "");
         textRow++;
 
-        System.out.println(board.pointHolder[24].getInverse());
-        System.out.println(board.pointHolder[23].getInverse());
-        System.out.println(board.pointHolder[22].getInverse());
-        System.out.println(board.pointHolder[21].getInverse());
-
         //event handler handles inputs upon enter button press
         textPanel.button.setOnAction(e -> {
             //if player1's name is empty, input becomes that and player 2's name is asked for
@@ -175,7 +170,6 @@ public class Main extends Application{
 
             //rolls dice
             else if (textPanel.getTextFieldText().equals("roll")){
-                System.out.println("roll");
                 //if there are dice on board already they are removed
                 if(diceOnBoard == true){
                     borderPane.getChildren().removeAll(diceImgView1, diceImgView2);
@@ -195,40 +189,23 @@ public class Main extends Application{
             }
 
             //if none of the other functions are being called it is assumed a move action is called
-            else{
+            else {
                 moveInput(textPanel.getTextFieldText());
-                
-                // Team Eniac, I just added this line to announce the winner of the game
-                BackgammonAnnounceWinner newGame = new BackgammonAnnounceWinner();
-                
-/*                do {
-                	System.out.println("Game is On");
-                      			// Code to play game should be here
-                	}while(board.PipCount());  //(player1 != 0 || player2 != 0);
-*/        /**
-         *  * I should be able to call this three lines at the end of the game or after every move.
-         *  * Maybe I should initially try after every move and then make it only at the end of the
-         * game when I get it working.
-        * */
-                if(board.PipCount()) {
-                String name = " ";
-                int result = newGame.winner();
-                if(result == 1) {
-                	if(player1.getColour() == 'B') {
-                		name = player1.getPlayerName();
-                		}
-                	else
-                		name = player2.getPlayerName();
-                	}
-                else {
-                	if(player1.getColour() == 'W') {
-                		name = player1.getPlayerName();
-                		}
-                	else {
-                		name = player2.getPlayerName();
-                		}
-                	}
-                newgame.WinnerDialog(name);
+                board.PipCount();
+                if (board.totalWhitePip == 0) {
+                    if (player1.getColour() == 'W') {
+                        AnnounceGame.WinnerDialog(player1.getPlayerName());
+                    } else {
+                        AnnounceGame.WinnerDialog(player2.getPlayerName());
+                    }
+                }
+
+                if (board.totalBlackPip == 0) {
+                    if (player1.getColour() == 'B') {
+                        AnnounceGame.WinnerDialog(player1.getPlayerName());
+                    } else {
+                        AnnounceGame.WinnerDialog(player2.getPlayerName());
+                    }
                 }
             }
 
@@ -325,7 +302,6 @@ public class Main extends Application{
         if(input.length() == i+3 && input.charAt(i) =='O' && input.charAt(i+1)=='f' && input.charAt(i+2)=='f'){
             secondOff=true;
             isInt2=true;
-            System.out.println("BIG Shaq");
         }
 
         //entered if the first input was valid
@@ -358,7 +334,6 @@ public class Main extends Application{
             //checks if the position exists
             if(point > 25 || point < 0){
                 infoPanel.addText(textRow, "There is no point here.");
-                System.out.println("ran");
                 textRow++;
                 isInt = false;
             }
@@ -1163,7 +1138,6 @@ public class Main extends Application{
                 for (int j = 25 - dice1; j < 25; j++) {
                     if (canBearOff && board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0) {
                         canBearOff = false;
-                        System.out.println("welcome" + j);
                         for (int l = 25 - 6; l < 25; l++) {
                             boolean secondMoveExists = false;
                             if (board.pointHolder[l].getPipColour() == 'B' && board.getNumberOfPips(l) > 0) {

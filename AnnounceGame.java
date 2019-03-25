@@ -65,7 +65,7 @@ public class AnnounceGame {
 		popUp.showAndWait();	
 	}*/
 
-	public void WinnerDialog(String text) {
+	public static void WinnerDialog(String text) {
 		// TODO Auto-generated method stub
 		
 		//creates a popUp window
