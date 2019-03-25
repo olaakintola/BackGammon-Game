@@ -202,9 +202,6 @@ import javafx.scene.paint.Color;
         // changes board display when "cheat" as a text command
         public void cheatBoard(){
 
-            int temp = 6;
-
-
 
 
             /* REMOVE ALL PIPS FROM ORIGINAL BOARD HERE */
@@ -217,7 +214,6 @@ import javafx.scene.paint.Color;
                 }
             }
 
-            System.out.println("        " + getNumberOfPips(6));
         /*
             Adding white checkers to the bottom right grid to
             the positions specified in Sprint 3 text
@@ -251,8 +247,7 @@ import javafx.scene.paint.Color;
               Adding black checkers to the top right grid to the
               positions specified in the sprint 3 notes
          */
-
-
+        
             for(int i=0;i<3;i++){
                 addPip(0, 'B');
             }
