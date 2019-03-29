@@ -229,7 +229,7 @@ import javafx.scene.paint.Color;
                 addPip(24, 'B');
             }
 
-            
+
         }
 
     /*
