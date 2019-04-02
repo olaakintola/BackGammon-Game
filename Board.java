@@ -13,6 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
     public class Board extends BorderPane {
+        StackPane sp = new StackPane();
+
         /* four girds are made, one for each section of the board
          * this makes it a lot easier to handle the placement of the pips
          * on the board */
@@ -49,6 +51,8 @@ import javafx.scene.paint.Color;
         private Label player1Name = new Label();
         private Label player2Name = new Label();
 
+        private Image doubleCube;
+        private ImageView doubleCubeView;
 
 
     //label array is used when there's an excess number of pips on a point, 26 are made, one for each position
@@ -60,7 +64,6 @@ import javafx.scene.paint.Color;
     public Board() {
         /*this stackpane is the root node of the scene
         * it draws the backgammon board and as it's the root all other nodes are drawn on top of it*/
-        StackPane sp = new StackPane();
         //getClass().getResource("backgammonBoard.jpg")
         Image img = new Image(getClass().getResourceAsStream("backgammonBoard.jpg"));
         ImageView imgView = new ImageView(img);
@@ -68,8 +71,8 @@ import javafx.scene.paint.Color;
         imgView.setFitHeight(656);
         imgView.setFitWidth(864);
 
-        Image doubleCube = new Image(getClass().getResourceAsStream("double64.jpg"));
-        ImageView doubleCubeView = new ImageView(doubleCube);
+        doubleCube = new Image(getClass().getResourceAsStream("double64.jpg"));
+        doubleCubeView = new ImageView(doubleCube);
 
 
         Label doublingCubeDoubling = new Label(" Doubling");
@@ -904,6 +907,65 @@ import javafx.scene.paint.Color;
             GridPane.setConstraints(player1Score, 0, 0);
 
 
+        }
+    }
+
+    public void updateDoublingCude(int doubleValue){
+        if(doubleValue==1){
+            doubleCubeGrid.getChildren().remove(doubleCubeView);
+
+            doubleCube =  new Image(getClass().getResourceAsStream("double64.jpg"));
+            doubleCubeView = new ImageView(doubleCube);
+            doubleCubeGrid.getChildren().add(doubleCubeView);
+        }
+
+        if(doubleValue==2){
+            doubleCubeGrid.getChildren().remove(doubleCubeView);
+
+            doubleCube =  new Image(getClass().getResourceAsStream("double2.jpg"));
+            doubleCubeView = new ImageView(doubleCube);
+            doubleCubeGrid.getChildren().add(doubleCubeView);
+        }
+
+        if(doubleValue==4){
+            doubleCubeGrid.getChildren().remove(doubleCubeView);
+
+            doubleCube =  new Image(getClass().getResourceAsStream("double4.jpg"));
+            doubleCubeView = new ImageView(doubleCube);
+            doubleCubeGrid.getChildren().add(doubleCubeView);
+        }
+
+        if(doubleValue==8){
+            doubleCubeGrid.getChildren().remove(doubleCubeView);
+
+            doubleCube =  new Image(getClass().getResourceAsStream("double8.jpg"));
+            doubleCubeView = new ImageView(doubleCube);
+            doubleCubeGrid.getChildren().add(doubleCubeView);
+        }
+
+        if(doubleValue==16){
+            doubleCubeGrid.getChildren().remove(doubleCubeView);
+
+            doubleCube =  new Image(getClass().getResourceAsStream("double16.jpg"));
+            doubleCubeView = new ImageView(doubleCube);
+            doubleCubeGrid.getChildren().add(doubleCubeView);
+        }
+
+        if(doubleValue==32){
+            doubleCubeGrid.getChildren().remove(doubleCubeView);
+
+            doubleCube =  new Image(getClass().getResourceAsStream("double32.jpg"));
+            doubleCubeView = new ImageView(doubleCube);
+            doubleCubeGrid.getChildren().add(doubleCubeView);
+        }
+
+        if (doubleValue == 64) {
+
+            doubleCubeGrid.getChildren().remove(doubleCubeView);
+
+            doubleCube =  new Image(getClass().getResourceAsStream("double64.jpg"));
+            doubleCubeView = new ImageView(doubleCube);
+            doubleCubeGrid.getChildren().add(doubleCubeView);
         }
     }
 }
