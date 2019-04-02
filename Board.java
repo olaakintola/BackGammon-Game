@@ -32,6 +32,25 @@ import javafx.scene.paint.Color;
         private GridPane bottomRightNumbers = new GridPane();
 
         public boolean numbersInInit;
+
+        //following grids are used for positioning
+        private GridPane doubleCubeGrid = new GridPane();
+        private GridPane doubleCubeLabelGrid = new GridPane();
+
+        private GridPane player1ScoreGrid = new GridPane();
+        private GridPane player1NameGrid = new GridPane();
+
+        private GridPane player2ScoreGrid = new GridPane();
+        private GridPane player2NameGrid = new GridPane();
+
+        private Label player1Score = new Label();
+        private Label player2Score = new Label();
+
+        private Label player1Name = new Label();
+        private Label player2Name = new Label();
+
+
+
     //label array is used when there's an excess number of pips on a point, 26 are made, one for each position
     private Label[] labelArray = new Label[26];
 
@@ -49,10 +68,44 @@ import javafx.scene.paint.Color;
         imgView.setFitHeight(656);
         imgView.setFitWidth(864);
 
+        Image doubleCube = new Image(getClass().getResourceAsStream("double64.jpg"));
+        ImageView doubleCubeView = new ImageView(doubleCube);
+
+
+        Label doublingCubeDoubling = new Label(" Doubling");
+        Label doublingCubeCube = new Label("    Cube");
+        doublingCubeCube.setTextFill(Color.web("white"));
+        doublingCubeDoubling.setTextFill(Color.web("white"));
+
+
+        GridPane.setConstraints(doubleCubeView, 0, 1);
+
+        doubleCubeGrid.getChildren().addAll(doubleCubeView);
+        doubleCubeGrid.setPadding(new Insets(289, 0, 0, 15));
+
+        GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+        GridPane.setConstraints(doublingCubeCube, 0, 1);
+        doubleCubeLabelGrid.setPadding(new Insets(270, 0, 0, 15));
+        doubleCubeLabelGrid.setVgap(53);
+        doubleCubeLabelGrid.getChildren().addAll(doublingCubeDoubling, doublingCubeCube);
+
+        GridPane.setConstraints(player1Name, 0, 0);
+        GridPane.setConstraints(player1Score, 0, 1);
+
+        player1ScoreGrid.setPadding(new Insets(43, 0, 0, 20));
+        player1NameGrid.setPadding(new Insets(32, 0, 0, 20));
+
+        setPlayerScore(1, "Player1", 0);
+
+        player1Score.setTextFill(Color.web("black"));
+        player1Name.setTextFill(Color.web("white"));
+        player1Score.setStyle("-fx-font: normal bold 80px 'monospace' ");
+
         boardInitialize(); //call to method to initialize the board state
         drawNumbers();
 
-        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, topRightNumbers, topleftNumbers, bottomLeftNumbers, bottomRightNumbers);
+        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, doubleCubeLabelGrid, player1NameGrid, player2NameGrid,
+                topRightNumbers, topleftNumbers, bottomLeftNumbers, bottomRightNumbers, doubleCubeGrid, player1ScoreGrid, player2ScoreGrid);
         setCenter(sp);
     }
 
@@ -859,5 +912,23 @@ import javafx.scene.paint.Color;
 
         if(whiteEmpty) totalWhitePip = 0;
         if(blackEmpty) totalBlackPip = 0;
+    }
+
+    public void setPlayerScore(int playerNumber, String playerName, int playerScore){
+        if(playerNumber==1){
+            player1ScoreGrid.getChildren().removeAll(player1Score);
+            player1NameGrid.getChildren().removeAll(player1Name);
+
+            player1Name.setText(playerName);
+            player1Score.setText(Integer.toString(playerScore));
+
+            player1ScoreGrid.getChildren().addAll(player1Score);
+            player1NameGrid.getChildren().addAll(player1Name);
+
+            GridPane.setConstraints(player1Name, 0, 0);
+            GridPane.setConstraints(player1Score, 0, 0);
+
+
+        }
     }
 }

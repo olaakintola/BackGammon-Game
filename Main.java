@@ -60,6 +60,8 @@ public class Main extends Application{
     private int doubleCounter=0;
 
 
+
+
     public static void main(String[] args) {
         Application.launch(args);
     }
