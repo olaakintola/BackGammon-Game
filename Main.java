@@ -59,6 +59,10 @@ public class Main extends Application{
     private boolean doublesToMove = true;
     private int doubleCounter=0;
 
+    // variable to keep track of the last command entered by the user
+    private String prevCommand = null;
+    private int doubleValue = 1;
+
 
 
 
@@ -141,19 +145,23 @@ public class Main extends Application{
 
             else if (textPanel.getTextFieldText().equals("move")) {
                 move();
+                prevCommand = "move";
             }
 
             //quits program if quit is entered
             else if (textPanel.getTextFieldText().equals("quit")) {
                 exit.exitProgram(primaryStage);
+                prevCommand = "quit";
             }
 
             else if (textPanel.getTextFieldText().equals("cheat")){
                 textPanel.cheatCommand(board);
+                prevCommand = "cheat";
             }
 
             //ends player's turn
             else if (textPanel.getTextFieldText().equals("next")){
+                prevCommand = "next";
                 turn++;
                 board.boardFlip();
                 infoPanel.addText(textRow, "Type roll to roll the dice.");
@@ -172,8 +180,45 @@ public class Main extends Application{
                 textRow++;
             }
 
+            /*
+                Action event for when user types "double"
+                **** Still to do: Keep track of who has the rolling dice ****
+             */
+            else if (textPanel.getTextFieldText().equals("double")){
+                if(prevCommand=="roll" || prevCommand=="move"){
+                    infoPanel.addText(textRow,"Doubling is not allowed");
+                    textRow++;
+                } else {
+                    textPanel.textField.setText("");
+                    board.boardFlip();
+                    infoPanel.addText(textRow, "Would you like to double the stakes?");
+                    textRow++;
+                    infoPanel.addText(textRow, "Type 'accept' or 'reject'");
+                    textRow++;
+                    textPanel.button.setOnAction(event -> {
+                        if (textPanel.getTextFieldText().equals("accept")) {
+                            doubleValue *= 2;
+                            board.boardFlip();
+                            infoPanel.addText(textRow, "The player accepted your double.");
+                            textRow++;
+                        } else if (textPanel.getTextFieldText().equals("reject")) {
+                            board.boardFlip();
+                            infoPanel.addText(textRow, "The player does not want to double. ");
+                            textRow++;
+                        } else {
+                            infoPanel.addText(textRow, "Invalid input");
+                            textRow++;
+                        }
+                    });
+
+                }
+
+            }
+
+
             //rolls dice
             else if (textPanel.getTextFieldText().equals("roll")){
+                prevCommand = "roll";
                 //if there are dice on board already they are removed
                 if(diceOnBoard == true){
                     borderPane.getChildren().removeAll(diceImgView1, diceImgView2);
@@ -194,6 +239,7 @@ public class Main extends Application{
 
             //if none of the other functions are being called it is assumed a move action is called
             else {
+                prevCommand = "move";
                 moveInput(textPanel.getTextFieldText());
                 board.PipCount();
                 if (board.totalWhitePip == 0) {

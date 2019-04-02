@@ -246,6 +246,10 @@ import javafx.scene.paint.Color;
         }
     }
 
+    /*
+    Modify the `cheat’ command so that the board goes to a position where all of the checkers have
+        been bore off except that both players should have two checkers on their own ace points.
+     */
         // changes board display when "cheat" as a text command
         public void cheatBoard(){
 
@@ -265,49 +269,20 @@ import javafx.scene.paint.Color;
          */
 
             for (int i=0; i< 2; i++){
-                addPip(5, 'W');
-            }
-
-            for(int i=0;i<3;i++){
-                addPip(25, 'W');
-            }
-
-            for (int i=0; i< 2; i++){
-                addPip(4, 'W');
-            }
-            System.out.println("    " + getNumberOfPips(4));
-            for (int i=0; i< 2; i++){
-                addPip(3, 'W');
-            }
-            System.out.println("    " + getNumberOfPips(3));
-            for (int i=0; i< 2; i++){
-                addPip(2, 'W');
-            }
-            System.out.println("    " + getNumberOfPips(2));
-            for (int i=0; i< 2; i++){
                 addPip(1, 'W');
             }
+
 
         /*
               Adding black checkers to the top right grid to the
               positions specified in the sprint 3 notes
          */
 
-            for(int i=0;i<3;i++){
-                addPip(0, 'B');
-            }
-
-            for(int i=0; i<3; i++){
+            for(int i=0;i<2;i++){
                 addPip(24, 'B');
             }
 
-            for(int i=0; i<3; i++){
-                addPip(22, 'B');
-            }
 
-            for(int i=0; i<3; i++){
-                addPip(21, 'B');
-            }
         }
 
     /*
