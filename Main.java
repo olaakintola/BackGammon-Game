@@ -403,6 +403,7 @@ public class Main extends Application{
         }
         if(secondOff){
             board.removePip(point, board.pointHolder[point].getPipColour());
+            board.addBearOff(board.pointHolder[point].getPipColour());
         }
     }
 

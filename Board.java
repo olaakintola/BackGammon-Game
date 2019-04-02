@@ -23,6 +23,14 @@ import javafx.scene.paint.Color;
         private GridPane bottomLeftGrid = new GridPane();
         private GridPane bottomRightGrid = new GridPane();
         private GridPane barGrid = new GridPane();
+        private GridPane topBearOffGrid = new GridPane();
+        private GridPane bottomBearOffGrid = new GridPane();
+
+        private int topBearOffGridNumberOfPips = 0;
+        private int bottomBearOffGridNumberOfPips = 0;
+
+        private Label topBearOffGridLabel = new Label();
+        private Label bottomBearOffGridLabel = new Label();
 
         //an array of pointDataTypes which is the data type used to store the information of a given point
         //26 are made, one for each point and bar position
@@ -81,38 +89,42 @@ import javafx.scene.paint.Color;
         doublingCubeDoubling.setTextFill(Color.web("white"));
 
 
-        GridPane.setConstraints(doubleCubeView, 0, 1);
-
-        doubleCubeGrid.getChildren().addAll(doubleCubeView);
-        doubleCubeGrid.setPadding(new Insets(289, 0, 0, 15));
-
         GridPane.setConstraints(doublingCubeDoubling, 0, 0);
-        GridPane.setConstraints(doublingCubeCube, 0, 1);
-        doubleCubeLabelGrid.setPadding(new Insets(270, 0, 0, 15));
-        doubleCubeLabelGrid.setVgap(53);
-        doubleCubeLabelGrid.getChildren().addAll(doublingCubeDoubling, doublingCubeCube);
+        GridPane.setConstraints(doubleCubeView, 0, 1);
+        GridPane.setConstraints(doublingCubeCube, 0, 2);
 
-        GridPane.setConstraints(player1Name, 0, 0);
-        GridPane.setConstraints(player1Score, 0, 1);
-
-        player1ScoreGrid.setPadding(new Insets(43, 0, 0, 20));
-        player1NameGrid.setPadding(new Insets(32, 0, 0, 20));
-
-        setPlayerScore(1, "Player1", 0);
-
-        player1Score.setTextFill(Color.web("black"));
-        player1Name.setTextFill(Color.web("white"));
-        player1Score.setStyle("-fx-font: normal bold 80px 'monospace' ");
+        doubleCubeGrid.getChildren().addAll(doubleCubeView, doublingCubeCube, doublingCubeDoubling);
+        doubleCubeGrid.setPadding(new Insets(280, 0, 0, 15));
 
         boardInitialize(); //call to method to initialize the board state
         drawNumbers();
 
         sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, doubleCubeLabelGrid, player1NameGrid, player2NameGrid,
-                topRightNumbers, topleftNumbers, bottomLeftNumbers, bottomRightNumbers, doubleCubeGrid, player1ScoreGrid, player2ScoreGrid);
+                topRightNumbers, topleftNumbers, bottomLeftNumbers, bottomRightNumbers, doubleCubeGrid, player1ScoreGrid, player2ScoreGrid, topBearOffGrid, bottomBearOffGrid);
         setCenter(sp);
     }
 
     private void boardInitialize(){
+
+        //Dimensions for the pips bearing off are set here
+        topBearOffGrid.setPadding(new Insets(23, 0, 0, 795));
+        bottomBearOffGrid.setPadding(new Insets(590, 0, 0, 795));
+
+
+
+        //Positions the player name and score, sets the color and font and then initialises the respective players to player1 and player2
+        //with scores of 0
+        player1NameGrid.setPadding(new Insets(40, 0, 0, 20));
+        setPlayerScore(1, "Player1", 0);
+        player1Score.setTextFill(Color.web("black"));
+        player1Name.setTextFill(Color.web("white"));
+        player1Score.setStyle("-fx-font: normal bold 50px 'sans-serif' ");
+
+        player2NameGrid.setPadding(new Insets(475, 0, 0, 20));
+        setPlayerScore(2, "Player2", 0);
+        player2Score.setTextFill(Color.web("black"));
+        player2Name.setTextFill(Color.web("white"));
+        player2Score.setStyle("-fx-font: normal bold 50px 'sans-serif' ");
 
         //insets and horizontal gaps are set here, these ensure the pips are displayed in the correct positions
         topRightGrid.setPadding(new Insets(23, 80, 50, 483));
@@ -798,6 +810,7 @@ import javafx.scene.paint.Color;
         removePip(startingPointNumber, newPipColour);
     }
 
+    //draws the numbers corresponding to the pips
     public void drawNumbers(){
         for (int i = 1; i<25; i++){
             numberLabelArray[i-1] = new Label(Integer.toString(i));
@@ -842,6 +855,7 @@ import javafx.scene.paint.Color;
         numbersInInit = true;
     }
 
+    //removes the numbers corresponding to the pips
     public void removeNumbers(){
         for(int i=0; i<6; i++){
             topRightNumbers.getChildren().remove(numberLabelArray[i+18]);
@@ -867,6 +881,7 @@ import javafx.scene.paint.Color;
         return pointHolder[point].getPlayerPip();
     }
 
+    //caled by main to get number of pips. required due to the way the positions on the board are stored
     public int getNumberOfPipsMain(int point){
         if(numbersInInit) return pointHolder[point].getPlayerPip();
         else return pointHolder[pointHolder[point].getInverse()].getPlayerPip();
@@ -874,7 +889,8 @@ import javafx.scene.paint.Color;
     
 	public static int totalWhitePip = 15;
 	public static int totalBlackPip = 15;
-	
+
+	//used to check if the board is empty for either pip colour
     public void PipCount() {
 
         boolean whiteEmpty = true;
@@ -892,6 +908,7 @@ import javafx.scene.paint.Color;
         if(blackEmpty) totalBlackPip = 0;
     }
 
+    //sets the player score and links it to a name. takes the player name, number and score
     public void setPlayerScore(int playerNumber, String playerName, int playerScore){
         if(playerNumber==1){
             player1ScoreGrid.getChildren().removeAll(player1Score);
@@ -906,10 +923,33 @@ import javafx.scene.paint.Color;
             GridPane.setConstraints(player1Name, 0, 0);
             GridPane.setConstraints(player1Score, 0, 0);
 
+            if(playerScore<10){
+                player1ScoreGrid.setPadding(new Insets(63, 0, 0, 30));
+            }
+            else player1ScoreGrid.setPadding(new Insets(63, 0, 0, 15));
+        }
 
+        if(playerNumber==2){
+            player2ScoreGrid.getChildren().removeAll(player2Score);
+            player2NameGrid.getChildren().removeAll(player2Name);
+
+            player2Name.setText(playerName);
+            player2Score.setText(Integer.toString(playerScore));
+
+            player2ScoreGrid.getChildren().addAll(player2Score);
+            player2NameGrid.getChildren().addAll(player2Name);
+
+            GridPane.setConstraints(player2Name, 0, 0);
+            GridPane.setConstraints(player2Score, 0, 0);
+
+            if(playerScore<10){
+                player2ScoreGrid.setPadding(new Insets(495, 0, 0, 30));
+            }
+            else player2ScoreGrid.setPadding(new Insets(495, 0, 0, 15));
         }
     }
 
+    //updates the doubling dice to a given integer. value must be one that cna show on dice naturally
     public void updateDoublingCude(int doubleValue){
         if(doubleValue==1){
             doubleCubeGrid.getChildren().remove(doubleCubeView);
@@ -968,4 +1008,52 @@ import javafx.scene.paint.Color;
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
     }
+
+    //adds a pip to the bear off position
+    public void addBearOff(char pipColour){
+        if(pipColour == 'W') {
+            //adds first pip if bear off grid is empty
+            if (bottomBearOffGridNumberOfPips == 0) {
+                Pip bearOffWhitePip = new Pip('W');
+                GridPane.setConstraints(bearOffWhitePip, 0, 0);
+                bottomBearOffGrid.getChildren().add(bearOffWhitePip);
+            }
+
+            //label displaying number of pips is removed, updated then re-added here
+            else{
+                bottomBearOffGrid.getChildren().remove(bottomBearOffGridLabel);
+                bottomBearOffGridLabel.setText(" " + Integer.toString(bottomBearOffGridNumberOfPips+1) + " Pips");
+                bottomBearOffGridLabel.setTextFill(Color.web("red"));
+                GridPane.setConstraints(bottomBearOffGridLabel, 0, 0);
+                bottomBearOffGrid.getChildren().add(bottomBearOffGridLabel);
+
+            }
+            bottomBearOffGridNumberOfPips++;
+        }
+
+        if(pipColour == 'B'){
+            //adds first pip if bear off grid is empty
+            if (topBearOffGridNumberOfPips == 0) {
+                Pip bearOffBlackPip = new Pip('B');
+                GridPane.setConstraints(bearOffBlackPip, 0, 0);
+                topBearOffGrid.getChildren().add(bearOffBlackPip);
+            }
+
+            //label displaying number of pips is removed, updated then re-added here
+            else{
+                topBearOffGrid.getChildren().remove(topBearOffGridLabel);
+                topBearOffGridLabel.setText(" " +Integer.toString(topBearOffGridNumberOfPips+1) + " Pips");
+                topBearOffGridLabel.setTextFill(Color.web("red"));
+                GridPane.setConstraints(topBearOffGridLabel, 0, 0);
+                topBearOffGrid.getChildren().add(topBearOffGridLabel);
+            }
+            topBearOffGridNumberOfPips++;
+        }
+    }
+
+    //removes all pips from both bear off spots
+    public void clearBearOff(){
+            topBearOffGrid.getChildren().clear();
+            bottomBearOffGrid.getChildren().clear();
+        }
 }
