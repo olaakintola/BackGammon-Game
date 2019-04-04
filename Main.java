@@ -11,11 +11,14 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.Optional;
 
 public class Main extends Application{
 
@@ -63,6 +66,11 @@ public class Main extends Application{
     private String prevCommand = null;
     private int doubleValue = 1;
 
+    //qll used in asking for score being played to
+    private boolean receivedPlayingToScore = false;
+    private boolean waitingForScore = false;
+    private int playingTo; //match score that's being played to
+    private boolean firstRun = true;
 
 
 
@@ -91,6 +99,9 @@ public class Main extends Application{
 
         //event handler handles inputs upon enter button press
         textPanel.button.setOnAction(e -> {
+
+
+
             //if player1's name is empty, input becomes that and player 2's name is asked for
             if(player1.getPlayerName()==null){
                 player1.setPlayerName(textPanel.getTextFieldText());
@@ -102,46 +113,73 @@ public class Main extends Application{
             //the dice is then rolled
             else if(player2.getPlayerName()==null){
                 player2.setPlayerName(textPanel.getTextFieldText());
-
-                int diceResult1 = dice1.rollDice();
-                int diceResult2 = dice2.rollDice();
-
-                //playerTracker is used to help determine who's turn it is. There's one for each player and there values
-                //are based on the first roll
-                if(diceResult1>diceResult2){
-                    player1Tracker = 0;
-                    player2Tracker = 1;
-                } else if(diceResult1<diceResult2){
-                    player1Tracker = 1;
-                    player2Tracker = 0;
-
-                    // if the two die output the same result, roll again
-                } else{
-                    diceResult1 = dice1.rollDice();
-                    System.out.println(diceResult1);
-                    diceResult2 = dice2.rollDice();
-                    System.out.println(diceResult2);
-                }
-
-                //first player gets the white pip, second player gets the black pip. this is displayed on the info panel
-                if(player1Tracker==0){
-                    player1.setColour('W');
-                    player2.setColour('B');
-                    infoPanel.addText(textRow++, player1.getPlayerName() + " is white. They move first.");
-                    infoPanel.addText(textRow++, player2.getPlayerName() + " is black. They move second.");
-                } else {
-                    player1.setColour('B');
-                    player2.setColour('W');
-                    infoPanel.addText(textRow++, player2.getPlayerName() + " is white. They move first.");
-                    infoPanel.addText(textRow++, player1.getPlayerName() + " is black. They move second.");
-                }
-
-                infoPanel.addText(textRow, "Type next to end your turn.");
-
-                //rolls dice on screen
-                visualRollDice(diceResult1, diceResult2);
-                calculateMoves(diceResult1, diceResult2);
+                //after both player names are set we ask what they'll play to
+                infoPanel.addText(5, "How many points would you like to play to? Answer must be a number.");
             }
+
+            else if(!receivedPlayingToScore){
+                //first run is used to make sure the player2 input isn't used for this question
+                if(!firstRun) infoPanel.addText(5, "How many points would you like to play to? Answer must be a number.");
+                    for(int i=0; i<textPanel.getTextFieldText().length(); i++) {
+                        receivedPlayingToScore=true;
+                        if (!Character.isDigit(textPanel.getTextFieldText().charAt(i))) {
+                            infoPanel.addText(5, "Not a valid input");
+                            receivedPlayingToScore=false;
+                            break;
+                        }
+                    }
+
+                    if(receivedPlayingToScore){
+
+                        waitingForScore = false;
+                        playingTo = Integer.parseInt(textPanel.getTextFieldText());
+                        infoPanel.addText(5,"You're playing to " + playingTo + " points.");
+
+                        //once playing to score has been established the dice rolls
+
+                        int diceResult1 = dice1.rollDice();
+                        int diceResult2 = dice2.rollDice();
+
+                        //playerTracker is used to help determine who's turn it is. There's one for each player and there values
+                        //are based on the first roll
+                        if(diceResult1>diceResult2){
+                            player1Tracker = 0;
+                            player2Tracker = 1;
+                        } else if(diceResult1<diceResult2){
+                            player1Tracker = 1;
+                            player2Tracker = 0;
+
+                            // if the two die output the same result, roll again
+                        } else{
+                            diceResult1 = dice1.rollDice();
+                            System.out.println(diceResult1);
+                            diceResult2 = dice2.rollDice();
+                            System.out.println(diceResult2);
+                        }
+
+                        //first player gets the white pip, second player gets the black pip. this is displayed on the info panel
+                        if(player1Tracker==0){
+                            player1.setColour('W');
+                            player2.setColour('B');
+                            infoPanel.addText(textRow++, player1.getPlayerName() + " is white. They move first.");
+                            infoPanel.addText(textRow++, player2.getPlayerName() + " is black. They move second.");
+                        } else {
+                            player1.setColour('B');
+                            player2.setColour('W');
+                            infoPanel.addText(textRow++, player2.getPlayerName() + " is white. They move first.");
+                            infoPanel.addText(textRow++, player1.getPlayerName() + " is black. They move second.");
+                        }
+
+                        infoPanel.addText(textRow, "Type next to end your turn.");
+
+                        //rolls dice on screen
+                        visualRollDice(diceResult1, diceResult2);
+                        calculateMoves(diceResult1, diceResult2);
+                    }
+
+                    if(firstRun) waitingForScore = true;
+            }
+
 
             else if (textPanel.getTextFieldText().equals("move")) {
                 move();
@@ -261,9 +299,10 @@ public class Main extends Application{
 
             //prints user input to infoPanel, if statement is used for formatting when asking for player names
             if (textRow == 1 || textRow == 4);
-            else infoPanel.addText(textRow, textPanel.getTextFieldText());
+            else if(receivedPlayingToScore || !firstRun) infoPanel.addText(textRow, textPanel.getTextFieldText());
             textRow++;
             textPanel.textField.setText(""); //empties input box after enter is pressed
+            if(firstRun && waitingForScore) firstRun = false;
 
         });
 
@@ -1325,5 +1364,6 @@ public class Main extends Application{
 
         menuOption.OptionsMenu(finalStringArray);
     }
+
 }
 

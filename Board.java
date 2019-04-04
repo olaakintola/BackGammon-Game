@@ -106,10 +106,28 @@ import javafx.scene.paint.Color;
 
     private void boardInitialize(){
 
+        //doubleCube is initialised as the 64 cube
+        doubleCube = new Image(getClass().getResourceAsStream("double64.jpg"));
+        doubleCubeView = new ImageView(doubleCube);
+
+        //labels are used for visual indication of doubling cube on board
+        Label doublingCubeDoubling = new Label(" Doubling");
+        Label doublingCubeCube = new Label("    Cube");
+        doublingCubeCube.setTextFill(Color.web("white"));
+        doublingCubeDoubling.setTextFill(Color.web("white"));
+
+        //grid constraints for double cube constituents are set
+        GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+        GridPane.setConstraints(doubleCubeView, 0, 1);
+        GridPane.setConstraints(doublingCubeCube, 0, 2);
+
+        doubleCubeGrid.getChildren().addAll(doubleCubeView, doublingCubeCube, doublingCubeDoubling);
+        doubleCubeGrid.setPadding(new Insets(280, 0, 0, 15));
+
+
         //Dimensions for the pips bearing off are set here
         topBearOffGrid.setPadding(new Insets(23, 0, 0, 795));
         bottomBearOffGrid.setPadding(new Insets(590, 0, 0, 795));
-
 
 
         //Positions the player name and score, sets the color and font and then initialises the respective players to player1 and player2
