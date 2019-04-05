@@ -45,7 +45,6 @@ import javafx.scene.paint.Color;
 
         //following grids are used for positioning
         private GridPane doubleCubeGrid = new GridPane();
-        private GridPane doubleCubeLabelGrid = new GridPane();
 
         private GridPane player1ScoreGrid = new GridPane();
         private GridPane player1NameGrid = new GridPane();
@@ -61,6 +60,9 @@ import javafx.scene.paint.Color;
 
         private Image doubleCube;
         private ImageView doubleCubeView;
+
+        private GridPane matchNumberGrid = new GridPane();
+        private Label matchNumberVisual = new Label();
 
 
     //label array is used when there's an excess number of pips on a point, 26 are made, one for each position
@@ -99,12 +101,30 @@ import javafx.scene.paint.Color;
         boardInitialize(); //call to method to initialize the board state
         drawNumbers();
 
-        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, doubleCubeLabelGrid, player1NameGrid, player2NameGrid,
+        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, player1NameGrid, player2NameGrid, matchNumberGrid,
                 topRightNumbers, topleftNumbers, bottomLeftNumbers, bottomRightNumbers, doubleCubeGrid, player1ScoreGrid, player2ScoreGrid, topBearOffGrid, bottomBearOffGrid);
         setCenter(sp);
     }
 
     private void boardInitialize(){
+
+        //labels used to set match number in center of board
+        Label matchNumberMatch = new Label(" Match");
+        matchNumberMatch.setTextFill(Color.web("white"));
+        Label matchNumberLength = new Label("Number");
+        matchNumberLength.setTextFill(Color.web("white"));
+        matchNumberVisual.setText(" 0");
+        matchNumberVisual.setTextFill(Color.web("black"));
+
+        matchNumberVisual.setStyle("-fx-font: normal bold 50px 'sans-serif' ");
+
+        GridPane.setConstraints(matchNumberMatch, 0, 0);
+        GridPane.setConstraints(matchNumberVisual, 0, 1);
+        GridPane.setConstraints(matchNumberLength, 0, 2);
+
+        matchNumberGrid.setPadding(new Insets(267, 0, 0, 408));
+        matchNumberGrid.setVgap(3);
+        matchNumberGrid.getChildren().addAll(matchNumberLength, matchNumberMatch, matchNumberVisual);
 
         //doubleCube is initialised as the 64 cube
         doubleCube = new Image(getClass().getResourceAsStream("double64.jpg"));
@@ -1082,5 +1102,14 @@ import javafx.scene.paint.Color;
     public void clearBearOff(){
             topBearOffGrid.getChildren().clear();
             bottomBearOffGrid.getChildren().clear();
-        }
+    }
+
+    //sets match number
+    public void setMatchNumber(int matchNumber){
+        if(matchNumber < 10) matchNumberVisual.setText(" " + matchNumber);
+        else matchNumberVisual.setText("" + matchNumber);
+    }
+
+
+
 }

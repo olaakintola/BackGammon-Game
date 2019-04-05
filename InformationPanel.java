@@ -23,7 +23,7 @@ public class InformationPanel extends BorderPane
 	private GridPane grid = new GridPane();
 	private int gridSize = 0;
 	private ScrollBar scrollBar = new ScrollBar();
-	private Label[] labels = new Label[500];
+	private Label[] labels = new Label[1000];//stores all the messages that are printed to the panel
 
 	public InformationPanel() {
 
@@ -34,6 +34,7 @@ public class InformationPanel extends BorderPane
 		pane.setStyle("-fx-background-color:Wheat"); //background colour is set
 		pane.getChildren( ).addAll( canvas, grid, scrollBar);
 
+		//scrollbar used for navigating info panel when the number of lines of texts exceeds size of the panel
         scrollBar.setLayoutX(canvas.getWidth()-scrollBar.getWidth());
         scrollBar.setMin(0);
         scrollBar.setOrientation(Orientation.VERTICAL);
@@ -41,7 +42,9 @@ public class InformationPanel extends BorderPane
         scrollBar.setMax(656);
         scrollBar.setValue(0);
 
+        //scrollbar call
         scrollBar.valueProperty().addListener(e -> {
+            //only entered when more text than panel size
             if(gridSize < 33);
             else{
                 removeLabels();
@@ -53,8 +56,8 @@ public class InformationPanel extends BorderPane
 		setCenter(pane);
 		}
 	
-	/**addText method takes the text from the user and outputs it to the display using 
-	 * the position parameter to determine row to output the string
+	/**addText method takes the text from the user and outputs it to the top of the display
+	 * position is used for asking for the players' names
 	 * */
 	public void addText(int position, String text){
 
@@ -73,26 +76,12 @@ public class InformationPanel extends BorderPane
 		displayLabels();
 
         System.out.println(scrollBar.getValue());
-
-		/*GridPane.setConstraints(label, 0, position);
-		grid.getChildren().addAll(label);*/
-
-
-		//below was an attempt to style the code, will be revisited next sprint so it hasn't been deleted, just commented out
-		
-		// set the constraints 31 is the number i need to remember sorry ola :p
-		//Label label3 = new Label(text);
-		//Label label2 = new Label(" It is the next player's turn...Enter how many moves");
-		// setting the styles of the text being shown on the display panel
-        //label3.setStyle("-fx-background-color:Wheat; -fx-text-fill:Black; -fx-font-size:20");
-        //label2.setStyle("-fx-background-color:Yellow; -fx-text-fill:Black; -fx-font-size:20");
-
-		//GridPane.setConstraints(label2, 1, position);
-//		GridPane.setConstraint(label2, 1, position);
-		// add the child to the grid
 	}
 
+	//used to display all the labels on the panel with newest at the top and oldest at the bottom
+    //if there are more lines than the size of the panel the code then reacts to the scrollbar position
 	public void displayLabels(){
+	    //prints messaged for board with less labels than panel size
 	    if(gridSize < 31) {
             int numOfLabels = gridSize;
             int j = 0;
@@ -104,23 +93,23 @@ public class InformationPanel extends BorderPane
             }
         }
 
+	    //else statement is used to react to scrollbar
 	    else{
-            System.out.println("scrollbar.gerValue: " + scrollBar.getValue()/scrollBar.getMax());
+
             int startPoint, moveRight, moveLeft;
             double startPointDouble;
             startPointDouble = 1 - (scrollBar.getValue() / scrollBar.getMax());
             startPointDouble *= gridSize;
-            startPoint = (int) Math.round(startPointDouble);
+            startPoint = (int) Math.round(startPointDouble); //is a position in gridsize that corresponds to the position
+            //of the scrollbar i.e. if scrollbar is in the middle and gridsize was 50, startPoint would be 25
 
             moveLeft = startPoint - 15;
             moveRight = startPoint + 15;
             if (moveLeft < 0) {
                 moveRight += +(moveLeft * -1);
-                moveLeft = 0;
             }
 
             if (moveRight > gridSize - 1) {
-                moveLeft -= gridSize - moveRight;
                 moveRight = gridSize - 1;
             }
 
