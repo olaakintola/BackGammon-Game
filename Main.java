@@ -129,6 +129,7 @@ public class Main extends Application{
                     infoPanel.addText(textRow, "Invalid input");
                     textRow++;
                 }
+                waitingForDouble=false;
             }
 
             //if player1's name is empty, input becomes that and player 2's name is asked for
