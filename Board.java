@@ -45,6 +45,9 @@ import javafx.scene.paint.Color;
 
         //following grids are used for positioning
         private GridPane doubleCubeGrid = new GridPane();
+        private Label doublingCubeDoubling = new Label(" Doubling");
+        private Label doublingCubeCube = new Label("    Cube");
+
 
         private GridPane player1ScoreGrid = new GridPane();
         private GridPane player1NameGrid = new GridPane();
@@ -81,22 +84,6 @@ import javafx.scene.paint.Color;
         imgView.setFitHeight(656);
         imgView.setFitWidth(864);
 
-        doubleCube = new Image(getClass().getResourceAsStream("double64.jpg"));
-        doubleCubeView = new ImageView(doubleCube);
-
-
-        Label doublingCubeDoubling = new Label(" Doubling");
-        Label doublingCubeCube = new Label("    Cube");
-        doublingCubeCube.setTextFill(Color.web("white"));
-        doublingCubeDoubling.setTextFill(Color.web("white"));
-
-
-        GridPane.setConstraints(doublingCubeDoubling, 0, 0);
-        GridPane.setConstraints(doubleCubeView, 0, 1);
-        GridPane.setConstraints(doublingCubeCube, 0, 2);
-
-        doubleCubeGrid.getChildren().addAll(doubleCubeView, doublingCubeCube, doublingCubeDoubling);
-        doubleCubeGrid.setPadding(new Insets(280, 0, 0, 15));
 
         boardInitialize(); //call to method to initialize the board state
         drawNumbers();
@@ -131,8 +118,8 @@ import javafx.scene.paint.Color;
         doubleCubeView = new ImageView(doubleCube);
 
         //labels are used for visual indication of doubling cube on board
-        Label doublingCubeDoubling = new Label(" Doubling");
-        Label doublingCubeCube = new Label("    Cube");
+        doublingCubeDoubling.setText(" Doubling");
+        doublingCubeCube.setText("    Cube");
         doublingCubeCube.setTextFill(Color.web("white"));
         doublingCubeDoubling.setTextFill(Color.web("white"));
 
@@ -143,6 +130,8 @@ import javafx.scene.paint.Color;
 
         doubleCubeGrid.getChildren().addAll(doubleCubeView, doublingCubeCube, doublingCubeDoubling);
         doubleCubeGrid.setPadding(new Insets(280, 0, 0, 15));
+
+        updateDoublingCube(2);
 
 
         //Dimensions for the pips bearing off are set here
@@ -997,12 +986,15 @@ import javafx.scene.paint.Color;
     }
 
     //updates the doubling dice to a given integer. value must be one that cna show on dice naturally
-    public void updateDoublingCude(int doubleValue){
+    public void updateDoublingCube(int doubleValue){
         if(doubleValue==1){
             doubleCubeGrid.getChildren().remove(doubleCubeView);
 
             doubleCube =  new Image(getClass().getResourceAsStream("double64.jpg"));
             doubleCubeView = new ImageView(doubleCube);
+            GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+            GridPane.setConstraints(doubleCubeView, 0, 1);
+            GridPane.setConstraints(doublingCubeCube, 0, 2);
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
 
@@ -1011,6 +1003,9 @@ import javafx.scene.paint.Color;
 
             doubleCube =  new Image(getClass().getResourceAsStream("double2.jpg"));
             doubleCubeView = new ImageView(doubleCube);
+            GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+            GridPane.setConstraints(doubleCubeView, 0, 1);
+            GridPane.setConstraints(doublingCubeCube, 0, 2);
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
 
@@ -1019,6 +1014,9 @@ import javafx.scene.paint.Color;
 
             doubleCube =  new Image(getClass().getResourceAsStream("double4.jpg"));
             doubleCubeView = new ImageView(doubleCube);
+            GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+            GridPane.setConstraints(doubleCubeView, 0, 1);
+            GridPane.setConstraints(doublingCubeCube, 0, 2);
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
 
@@ -1027,6 +1025,9 @@ import javafx.scene.paint.Color;
 
             doubleCube =  new Image(getClass().getResourceAsStream("double8.jpg"));
             doubleCubeView = new ImageView(doubleCube);
+            GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+            GridPane.setConstraints(doubleCubeView, 0, 1);
+            GridPane.setConstraints(doublingCubeCube, 0, 2);
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
 
@@ -1035,6 +1036,9 @@ import javafx.scene.paint.Color;
 
             doubleCube =  new Image(getClass().getResourceAsStream("double16.jpg"));
             doubleCubeView = new ImageView(doubleCube);
+            GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+            GridPane.setConstraints(doubleCubeView, 0, 1);
+            GridPane.setConstraints(doublingCubeCube, 0, 2);
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
 
@@ -1043,6 +1047,9 @@ import javafx.scene.paint.Color;
 
             doubleCube =  new Image(getClass().getResourceAsStream("double32.jpg"));
             doubleCubeView = new ImageView(doubleCube);
+            GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+            GridPane.setConstraints(doubleCubeView, 0, 1);
+            GridPane.setConstraints(doublingCubeCube, 0, 2);
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
 
@@ -1052,6 +1059,9 @@ import javafx.scene.paint.Color;
 
             doubleCube =  new Image(getClass().getResourceAsStream("double64.jpg"));
             doubleCubeView = new ImageView(doubleCube);
+            GridPane.setConstraints(doublingCubeDoubling, 0, 0);
+            GridPane.setConstraints(doubleCubeView, 0, 1);
+            GridPane.setConstraints(doublingCubeCube, 0, 2);
             doubleCubeGrid.getChildren().add(doubleCubeView);
         }
     }
@@ -1109,7 +1119,5 @@ import javafx.scene.paint.Color;
         if(matchNumber < 10) matchNumberVisual.setText(" " + matchNumber);
         else matchNumberVisual.setText("" + matchNumber);
     }
-
-
 
 }
