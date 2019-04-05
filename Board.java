@@ -305,6 +305,10 @@ import javafx.scene.paint.Color;
                 addPip(1, 'W');
             }
 
+            for (int i=0; i<13;i++){
+                addBearOff('W');
+            }
+
 
         /*
               Adding black checkers to the top right grid to the
@@ -314,6 +318,11 @@ import javafx.scene.paint.Color;
             for(int i=0;i<2;i++){
                 addPip(24, 'B');
             }
+
+            for (int i=0; i<13;i++){
+                addBearOff('B');
+            }
+
 
 
         }

@@ -239,6 +239,7 @@ public class Main extends Application{
                             board.boardFlip();
                             infoPanel.addText(textRow, "The player accepted your double.");
                             textRow++;
+                            board.updateDoublingCude(doubleValue);
                         } else if (textPanel.getTextFieldText().equals("reject")) {
                             board.boardFlip();
                             infoPanel.addText(textRow, "The player does not want to double. ");
