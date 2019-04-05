@@ -66,6 +66,11 @@ public class Main extends Application{
     private String prevCommand = null;
     private int doubleValue = 1;
 
+    // if the value is 0, anyone can double
+    // if the value is 1, player 1 has the doubling dice
+    // if the value is 2, player 2 has the doubling dice
+    private int playerWithDoublingDice=0;
+
     //qll used in asking for score being played to
     private boolean receivedPlayingToScore = false;
     private boolean waitingForScore = false;
@@ -223,7 +228,13 @@ public class Main extends Application{
                 **** Still to do: Keep track of who has the rolling dice ****
              */
             else if (textPanel.getTextFieldText().equals("double")){
-                if(prevCommand=="roll" || prevCommand=="move"){
+                int rolledDice;
+                if(turn%2==player1Tracker){
+                    rolledDice = player1Tracker;
+                } else{
+                    rolledDice = player2Tracker;
+                }
+                if(prevCommand=="roll" || prevCommand=="move" || (playerWithDoublingDice==2) || (turn%2!=rolledDice)  ){
                     infoPanel.addText(textRow,"Doubling is not allowed");
                     textRow++;
                 } else {
@@ -240,6 +251,11 @@ public class Main extends Application{
                             infoPanel.addText(textRow, "The player accepted your double.");
                             textRow++;
                             board.updateDoublingCude(doubleValue);
+                            if(rolledDice==player1Tracker){
+                                playerWithDoublingDice=player2Tracker;
+                            } else{
+                                playerWithDoublingDice=player1Tracker;
+                            }
                         } else if (textPanel.getTextFieldText().equals("reject")) {
                             board.boardFlip();
                             infoPanel.addText(textRow, "The player does not want to double. ");
