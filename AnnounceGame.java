@@ -102,8 +102,8 @@ public class AnnounceGame {
 		//creates a popUp window
 		Stage popUp = new Stage();
 
-		// makes sure no changes are made in the Main window while this window is open
-		popUp.initModality(Modality.APPLICATION_MODAL);
+		//OLA ADDED lINE: makes sure changes are made in the Main window while this window is open
+		popUp.initModality(Modality.APPLICATION_MODAL);		
 		popUp.setTitle("Options Menu");
 		popUp.setMinWidth(400);
 		popUp.setHeight(200);
@@ -123,6 +123,7 @@ public class AnnounceGame {
 
 		//vbox stores label and is set in centre
 		VBox windowDisplay = new VBox();
+		windowDisplay.setStyle("-fx-background-color:Wheat"); //background colour is set
 		windowDisplay.getChildren().addAll(choiceBox);
 		windowDisplay.setAlignment(Pos.CENTER);
 

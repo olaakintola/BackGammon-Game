@@ -17,6 +17,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+
 public class Main extends Application{
 
 
@@ -26,6 +31,7 @@ public class Main extends Application{
     private Board board = new Board();
     private Exit exit = new Exit();
 
+	HashMap<String, String> userEntry = new HashMap<String, String>();
 
     //Moving secondloop and wait are used for the move method that moves pips around 1 at a time
     private int moving = 1;
@@ -276,7 +282,16 @@ public class Main extends Application{
             //if none of the other functions are being called it is assumed a move action is called
             else {
                 prevCommand = "move";
-                moveInput(textPanel.getTextFieldText());
+                
+            	String inputText1 = textPanel.getTextFieldText();
+            	String inputText = inputText1.toUpperCase();
+            	System.out.println(inputText);
+            	String stringMove = userEntry.get(inputText);
+            	System.out.println(stringMove);
+                moveInput(stringMove.split(" ")[0].replace("-", " "));
+                moveInput(stringMove.split(" ")[1].replace("-", " "));
+            
+  //              moveInput(textPanel.getTextFieldText());
                 board.PipCount();
                 if (board.totalWhitePip == 0) {
                     if (player1.getColour() == 'W') {
@@ -1341,6 +1356,21 @@ public class Main extends Application{
         for (int i = 0; i < 26; i++) {
             alphabets[i] =  (char)('A' + i) + "";
         }
+        
+        String[] combinations = new String[26 * 26];
+//        System.out.println(alphabets.length);
+        
+        for (int i = 0; i < 26; i++) {
+        	String letter = alphabets[i];
+        	for (int j = 0; j < 26; j++) {
+        		String cmb = letter + alphabets[j];
+        		combinations[i * 26 + j] = cmb;
+        	}
+        }
+        
+        String[] all = Stream.of(alphabets, combinations).flatMap(Stream::of)
+        		.toArray(String[]::new);
+        
 
         System.out.println("reach");
         System.out.println("k: "+k);
@@ -1351,9 +1381,10 @@ public class Main extends Application{
 
         }
 
-        String[] finalStringArray = new String[26];
-        for(int i=0; i<26;i++) {
-            finalStringArray[i] = alphabets[i] +" "+ potentialMoves[i];
+        int n = potentialMoves.length;
+        String[] finalStringArray = new String[n];
+        for(int i=0; i<n;i++) {
+            finalStringArray[i] = all[i] +" "+ potentialMoves[i];
         }
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>(FXCollections.observableArrayList(
@@ -1361,6 +1392,11 @@ public class Main extends Application{
         choiceBox.setPrefWidth(500);
 
         menuOption.OptionsMenu(finalStringArray);
+        
+//		HashMap<String, String> userEntry = new HashMap<String, String>();
+		for(int i = 0; i < 500; i++) {
+			userEntry.put(all[i], potentialMoves[i]);
+		}
     }
 
 }
