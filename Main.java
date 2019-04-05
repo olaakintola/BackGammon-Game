@@ -70,6 +70,9 @@ public class Main extends Application{
     // if the value is 1, player 1 has the doubling dice
     // if the value is 2, player 2 has the doubling dice
     private int playerWithDoublingDice=0;
+    int rolledDice;
+
+    private boolean waitingForDouble = false;
 
     //qll used in asking for score being played to
     private boolean receivedPlayingToScore = false;
@@ -106,6 +109,27 @@ public class Main extends Application{
         textPanel.button.setOnAction(e -> {
 
 
+            if(waitingForDouble){
+                if (textPanel.getTextFieldText().equals("accept")) {
+                    doubleValue *= 2;
+                    board.boardFlip();
+                    infoPanel.addText(textRow, "The player accepted your double.");
+                    textRow++;
+                    board.updateDoublingCude(doubleValue);
+                    if(rolledDice==player1Tracker){
+                        playerWithDoublingDice=player2Tracker;
+                    } else{
+                        playerWithDoublingDice=player1Tracker;
+                    }
+                } else if (textPanel.getTextFieldText().equals("reject")) {
+                    board.boardFlip();
+                    infoPanel.addText(textRow, "The player does not want to double. ");
+                    textRow++;
+                } else {
+                    infoPanel.addText(textRow, "Invalid input");
+                    textRow++;
+                }
+            }
 
             //if player1's name is empty, input becomes that and player 2's name is asked for
             if(player1.getPlayerName()==null){
@@ -228,7 +252,7 @@ public class Main extends Application{
                 **** Still to do: Keep track of who has the rolling dice ****
              */
             else if (textPanel.getTextFieldText().equals("double")){
-                int rolledDice;
+
                 if(turn%2==player1Tracker){
                     rolledDice = player1Tracker;
                 } else{
@@ -244,27 +268,7 @@ public class Main extends Application{
                     textRow++;
                     infoPanel.addText(textRow, "Type 'accept' or 'reject'");
                     textRow++;
-                    textPanel.button.setOnAction(event -> {
-                        if (textPanel.getTextFieldText().equals("accept")) {
-                            doubleValue *= 2;
-                            board.boardFlip();
-                            infoPanel.addText(textRow, "The player accepted your double.");
-                            textRow++;
-                            board.updateDoublingCude(doubleValue);
-                            if(rolledDice==player1Tracker){
-                                playerWithDoublingDice=player2Tracker;
-                            } else{
-                                playerWithDoublingDice=player1Tracker;
-                            }
-                        } else if (textPanel.getTextFieldText().equals("reject")) {
-                            board.boardFlip();
-                            infoPanel.addText(textRow, "The player does not want to double. ");
-                            textRow++;
-                        } else {
-                            infoPanel.addText(textRow, "Invalid input");
-                            textRow++;
-                        }
-                    });
+                    waitingForDouble=true;
 
                 }
 
