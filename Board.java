@@ -3,6 +3,7 @@ Board Class
 Shane Byrne
 * */
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -11,8 +12,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-    public class Board extends BorderPane {
+public class Board extends BorderPane {
         StackPane sp = new StackPane();
 
         /* four girds are made, one for each section of the board
@@ -131,7 +133,6 @@ import javafx.scene.paint.Color;
         doubleCubeGrid.getChildren().addAll(doubleCubeView, doublingCubeCube, doublingCubeDoubling);
         doubleCubeGrid.setPadding(new Insets(280, 0, 0, 15));
 
-        updateDoublingCube(2);
 
 
         //Dimensions for the pips bearing off are set here
@@ -1120,4 +1121,27 @@ import javafx.scene.paint.Color;
         else matchNumberVisual.setText("" + matchNumber);
     }
 
+    public int getGameScore(int doubleCube, char pipColour){
+        int gameScore = 0;
+        int gameResult = 0;
+        if(pipColour == 'W'){
+            for(int i=1; i<7; i++){
+                if(pointHolder[i].getPipColour() == 'B' && pointHolder[i].getPlayerPip() > 0) gameResult = 3;
+            }
+
+            for(int i=7; i<19; i++){
+                if(pointHolder[i].getPipColour() == 'B' && pointHolder[i].getPlayerPip() > 0) gameResult = 2;
+            }
+
+            if(topBearOffGridNumberOfPips > 0) {
+                gameResult = 1;
+                gameScore = doubleCube * gameResult;
+            }
+
+            else if(gameResult==3) gameScore = doubleCube * gameResult;
+
+            else if(gameResult==2) gameScore = doubleCube * gameResult;
+        }
+        return gameScore;
+    }
 }

@@ -8,6 +8,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
@@ -83,6 +84,12 @@ public class Main extends Application{
     private int playingTo; //match score that's being played to
     private boolean firstRun = true;
 
+    private boolean startNewGame = false;
+    private int gameWinner;
+    private int matchNumber = 1; //used to keep track of the match number
+
+    private boolean initialRoll = false;
+
 
 
     public static void main(String[] args) {
@@ -107,6 +114,7 @@ public class Main extends Application{
         //asks for player 1's name
         infoPanel.addText(0, "");
         textRow++;
+        board.setMatchNumber(matchNumber);
 
         //event handler handles inputs upon enter button press
         textPanel.button.setOnAction(e -> {
@@ -135,9 +143,81 @@ public class Main extends Application{
                 waitingForDouble=false;
             }
 
+            //if it's the first roll in a new game this is entered to see who will move first
+            if(initialRoll){
+                if(textPanel.getTextFieldText().equals("roll")){
+                    int diceResult1 = dice1.rollDice();
+                    int diceResult2 = dice2.rollDice();
+
+                    //playerTracker is used to help determine who's turn it is. There's one for each player and there values
+                    //are based on the first roll
+                    if(diceResult1>diceResult2){
+                        player1Tracker = 0;
+                        player2Tracker = 1;
+                    } else if(diceResult1<diceResult2){
+                        player1Tracker = 1;
+                        player2Tracker = 0;
+
+                        // if the two die output the same result, roll again
+                    } else{
+                        diceResult1 = dice1.rollDice();
+                        System.out.println(diceResult1);
+                        diceResult2 = dice2.rollDice();
+                        System.out.println(diceResult2);
+                    }
+
+                    //first player gets the white pip, second player gets the black pip. this is displayed on the info panel
+                    if(player1Tracker==0){
+                        player1.setColour('W');
+                        player2.setColour('B');
+                        infoPanel.addText(textRow++, player1.getPlayerName() + " is white. They move first.");
+                        infoPanel.addText(textRow++, player2.getPlayerName() + " is black. They move second.");
+                    } else {
+                        player1.setColour('B');
+                        player2.setColour('W');
+                        infoPanel.addText(textRow++, player2.getPlayerName() + " is white. They move first.");
+                        infoPanel.addText(textRow++, player1.getPlayerName() + " is black. They move second.");
+                    }
+                    visualRollDice(diceResult1, diceResult2);
+
+                    calculateMoves(diceResult1, diceResult2);
+                    initialRoll=false;
+                }
+                //else infoPanel.addText(5, "you need to roll first!");
+            }
+
+            //this is entered at the start of a new game, it resets everything and tells the player to roll
+            else if(startNewGame) {
+                borderPane.setCenter(null);
+                board = null;
+                board = new Board();
+                borderPane.setCenter(board);
+
+                board.setPlayerScore(1, player1.getPlayerName(), player1.getMatchScore());
+
+                board.setPlayerScore(2, player2.getPlayerName(), player2.getMatchScore());
+
+                board.setMatchNumber(matchNumber);
+
+                board.updateDoublingCube(doubleValue);
+
+                startNewGame = false;
+                initialRoll = true;
+                infoPanel.addText(5, "type roll to see who moves first");
+                infoPanel.addText(5, player1.getPlayerName()+" rolls on the left");
+                infoPanel.addText(5, player2.getPlayerName()+" rolls on the right");
+                turn=0;
+                board.totalWhitePip=15;
+                board.totalBlackPip=15;
+            }
+
+
+
             //if player1's name is empty, input becomes that and player 2's name is asked for
-            if(player1.getPlayerName()==null){
+            else if(player1.getPlayerName()==null){
                 player1.setPlayerName(textPanel.getTextFieldText());
+                player1.setMatchScore(0);
+                board.setPlayerScore(1, player1.getPlayerName(), 0);
                 infoPanel.addText(1, " ");
             }
 
@@ -146,6 +226,8 @@ public class Main extends Application{
             //the dice is then rolled
             else if(player2.getPlayerName()==null){
                 player2.setPlayerName(textPanel.getTextFieldText());
+                player2.setMatchScore(0);
+                board.setPlayerScore(2, player2.getPlayerName(), 0);
                 //after both player names are set we ask what they'll play to
                 infoPanel.addText(5, "How many points would you like to play to? Answer must be a number.");
             }
@@ -211,6 +293,14 @@ public class Main extends Application{
                     }
 
                     if(firstRun) waitingForScore = true;
+            }
+
+            else if(textPanel.getTextFieldText().equals("restart")){
+
+                    System.out.println( "Restarting app!" );
+                    primaryStage.close();
+                    Platform.runLater( () -> new Main().start( new Stage() ) );
+
             }
 
 
@@ -307,7 +397,7 @@ public class Main extends Application{
             //if none of the other functions are being called it is assumed a move action is called
             else {
                 prevCommand = "move";
-                
+
             	String inputText1 = textPanel.getTextFieldText();
             	String inputText = inputText1.toUpperCase();
             	System.out.println(inputText);
@@ -317,21 +407,38 @@ public class Main extends Application{
                 moveInput(stringMove.split(" ")[1].replace("-", " "));
             
   //              moveInput(textPanel.getTextFieldText());
+                //checks if a player has won the game, if they have a new game is set up
                 board.PipCount();
                 if (board.totalWhitePip == 0) {
                     if (player1.getColour() == 'W') {
                         AnnounceGame.WinnerDialog(player1.getPlayerName());
+                        player1.setMatchScore(player1.getMatchScore() + board.getGameScore(doubleValue, 'W'));
+                        infoPanel.addText(5, "enter any key to start the next game");
+                        gameWinner = 1;
                     } else {
                         AnnounceGame.WinnerDialog(player2.getPlayerName());
+                        player2.setMatchScore(player2.getMatchScore() + board.getGameScore(doubleValue, 'W'));
+                        infoPanel.addText(5, "enter any key to start the next game");
+                        gameWinner = 2;
                     }
+                    matchNumber++;
+                    startNewGame=true;
                 }
 
                 if (board.totalBlackPip == 0) {
                     if (player1.getColour() == 'B') {
                         AnnounceGame.WinnerDialog(player1.getPlayerName());
+                        player1.setMatchScore(player1.getMatchScore() + board.getGameScore(doubleValue, 'B'));
+                        infoPanel.addText(5, "enter any key to start the next game");
+                        gameWinner = 1;
                     } else {
                         AnnounceGame.WinnerDialog(player2.getPlayerName());
+                        player2.setMatchScore(player2.getMatchScore() + board.getGameScore(doubleValue, 'B'));
+                        infoPanel.addText(5, "enter any key to start the next game");
+                        gameWinner = 2;
                     }
+                    matchNumber++;
+                    startNewGame=true;
                 }
             }
 
