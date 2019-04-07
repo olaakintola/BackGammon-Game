@@ -432,7 +432,8 @@ public class Main extends Application{
                         gameWinner = 2;
                     }
    //                 matchNumber++;
-                    
+                    //Checks if the number of matches played is equal to the score being 
+                    // played to and if yes output the name of winner or if it is a tie
                     if(matchNumber == playingTo) {
                     	
                     	if(player1.getMatchScore() > player2.getMatchScore()) {
@@ -477,7 +478,9 @@ public class Main extends Application{
                         gameWinner = 2;
                     }
    //                 matchNumber++;
-                    
+
+                    //Checks if the number of matches played is equal to the score being 
+                    // played to and if yes output the name of winner or if it is a tie
                     if(matchNumber == playingTo) {
                     	
                     	if(player1.getMatchScore() > player2.getMatchScore()) {
@@ -1552,6 +1555,7 @@ public class Main extends Application{
         InformationPanel displayMenu = new InformationPanel();
 //        displayMenu.printMenu(potentialMoves);
 
+        // Creating an array of alphabets from A..ZZ
         String[] alphabets = new String[26];
         for (int i = 0; i < 26; i++) {
             alphabets[i] =  (char)('A' + i) + "";
@@ -1591,9 +1595,11 @@ public class Main extends Application{
                 "one", "two", "three"));
         choiceBox.setPrefWidth(500);
 
+        // displays the potential moves with corresponding alphabets as a menu
         menuOption.OptionsMenu(finalStringArray);
         
 //		HashMap<String, String> userEntry = new HashMap<String, String>();
+        // Creating alphabets to corresponding moves menu 
 		for(int i = 0; i < 500; i++) {
 			userEntry.put(all[i], potentialMoves[i]);
 		}
@@ -1620,7 +1626,7 @@ public class Main extends Application{
 		Label displayLabel = new Label();
 //		String myChoice = "";
 //		do {
-		displayLabel.setText("Do you want to play another match: Yes: 1 -- No: 2");
+		displayLabel.setText("Do you want to play another match?: yes/no");
 //		 myChoice = nameInput.getText(); 
 //		}while (myChoice == "1"|| myChoice == "2" );
  //   	button.setOnAction(e -> System.out.println(nameInput.getText()));
@@ -1639,12 +1645,13 @@ public class Main extends Application{
 
 				System.out.println("Quit");
 			}
-	//		else 
-//				invalidInput = true;
-				
+			else {
+			AnotherMatchErrorMessage();
+			popUp.close();
+			}
 		});
 		
-		VBox matchPopUp = new VBox(nameInput, button);
+		VBox matchPopUp = new VBox(displayLabel,nameInput, button);
 		matchPopUp.setStyle("-fx-background-color:Wheat"); //background colour is set
 		StackPane root = new StackPane(matchPopUp);
 		
@@ -1668,6 +1675,66 @@ public class Main extends Application{
 		if(invalidInput)
 			AnotherMatch();
 	} 
+    
+    // Displays a dialog box with error message to the user when an invalid input is entered
+    public static void AnotherMatchErrorMessage() {
+    		
+    	Stage popUp = new Stage();
+
+	// makes sure no changes are made in the Main window while this window is open
+		popUp.initModality(Modality.APPLICATION_MODAL);
+		popUp.setTitle("New Match");
+		popUp.setMinWidth(400);
+		popUp.setHeight(200);
+	
+//    TextPanel textPanel2 = new TextPanel();
+    	TextField nameInput = new TextField();
+		Button button = new Button("Enter");
+
+	//label explains how the game works
+		Label displayLabel = new Label();
+
+		displayLabel.setText("ERROR MESSAGE"
+				+ " Invalid Input: Only Enter yes/no");
+	
+		button.disabledProperty().and(Bindings.notEqualIgnoreCase("yes", nameInput.textProperty()).and(Bindings.notEqualIgnoreCase("no", nameInput.textProperty())));
+		button.setText("CLICK ME!!!");
+		boolean invalidInput = false;
+		button.setOnAction(e -> {
+			if(nameInput.getText().equals("yes")) {
+				restartCall = true;
+				popUp.close();
+			}
+			else if(nameInput.getText().equals("no")) {
+				restartCall = false;
+				popUp.close();
+
+				System.out.println("Go away");
+			}
+		//I am not sure how to do with the else case
+			else {
+	//			popUp.close();
+				AnotherMatchErrorMessage();
+				popUp.close();
+
+			}
+//			invalidInput = true;
+			
+		});
+		
+		VBox matchPopUp = new VBox(displayLabel, nameInput, button);
+		matchPopUp.setStyle("-fx-background-color:wheat"); //background colour is set
+		StackPane root = new StackPane(matchPopUp);
+	
+//		StackPane root = new StackPane(new VBox(displayLabel, nameInput,button));
+	
+		Scene scene = new Scene(root);
+
+		popUp.setScene(scene);
+		popUp.showAndWait();
+		if(invalidInput)
+		AnotherMatch();
+    }
     
 }
 

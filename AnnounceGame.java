@@ -94,6 +94,7 @@ public class AnnounceGame {
 				popUp.showAndWait();	
 	}
 
+	// Function that displays the the array containing the menu option to the screen
 	public void OptionsMenu(String[] finalStringArray) {
 		// TODO Auto-generated method stub
 
@@ -118,8 +119,8 @@ public class AnnounceGame {
 
 
 		//		displayLabel.setText(text);
-		Button exitDisplay = new Button("Congratulations, You Won");
-		exitDisplay.setOnAction(e -> popUp.close());
+	//	Button exitDisplay = new Button("Congratulations, You Won");
+	//	exitDisplay.setOnAction(e -> popUp.close());
 
 		//vbox stores label and is set in centre
 		VBox windowDisplay = new VBox();
