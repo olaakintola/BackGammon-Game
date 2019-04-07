@@ -9,12 +9,19 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -65,6 +72,8 @@ public class Main extends Application{
 
     private boolean doublesToMove = true;
     private int doubleCounter=0;
+    
+    private static boolean restartCall = false;
 
     // variable to keep track of the last command entered by the user
     private String prevCommand = null;
@@ -103,6 +112,7 @@ public class Main extends Application{
         //Announce game is instantiated and use to announce the game
         AnnounceGame newgame = new AnnounceGame();
         AnnounceGame.loadDialog();
+        AnotherMatch();
 
         //opens up confirm box when exit window is clicked
         primaryStage.setOnCloseRequest(e -> {
@@ -437,33 +447,94 @@ public class Main extends Application{
                 board.PipCount();
                 if (board.totalWhitePip == 0) {
                     if (player1.getColour() == 'W') {
-                        AnnounceGame.WinnerDialog(player1.getPlayerName());
+                        AnnounceGame.WinnerDialog(player1.getPlayerName() + " WON A GAME");
                         player1.setMatchScore(player1.getMatchScore() + board.getGameScore(doubleValue, 'W'));
                         infoPanel.addText(5, "enter any key to start the next game");
                         gameWinner = 1;
                     } else {
-                        AnnounceGame.WinnerDialog(player2.getPlayerName());
+                        AnnounceGame.WinnerDialog(player2.getPlayerName() + " WON A GAME");
                         player2.setMatchScore(player2.getMatchScore() + board.getGameScore(doubleValue, 'W'));
                         infoPanel.addText(5, "enter any key to start the next game");
                         gameWinner = 2;
                     }
+   //                 matchNumber++;
+                    //Checks if the number of matches played is equal to the score being 
+                    // played to and if yes output the name of winner or if it is a tie
+                    if(matchNumber == playingTo) {
+                    	
+                    	if(player1.getMatchScore() > player2.getMatchScore()) {
+                    		AnnounceGame.WinnerDialog(player1.getPlayerName() + ": MATCH WINNER");
+                            AnotherMatch();
+                            if(restartCall) {
+                            	primaryStage.close();
+                            	Platform.runLater( () -> new Main().start(new Stage()));
+                            }
+                    	}
+                    	
+                    	else if(player1.getMatchScore() < player2.getMatchScore()) {
+                    		
+                    		AnnounceGame.WinnerDialog(player2.getPlayerName() + ": MATCH WINNER");
+                            AnotherMatch();
+                            if(restartCall) {
+                            	primaryStage.close();
+                            	Platform.runLater( () -> new Main().start(new Stage()));
+                            }
+                    		
+                    	}
+                    	
+                    	else {
+                    		AnnounceGame.WinnerDialog("The Match is a Tie");
+                    	}
+                    }
+                    
                     matchNumber++;
                     startNewGame=true;
                 }
 
                 if (board.totalBlackPip == 0) {
                     if (player1.getColour() == 'B') {
-                        AnnounceGame.WinnerDialog(player1.getPlayerName());
+                        AnnounceGame.WinnerDialog(player1.getPlayerName() + " WON A GAME");
                         player1.setMatchScore(player1.getMatchScore() + board.getGameScore(doubleValue, 'B'));
                         infoPanel.addText(5, "enter any key to start the next game");
                         gameWinner = 1;
                     } else {
-                        AnnounceGame.WinnerDialog(player2.getPlayerName());
+                        AnnounceGame.WinnerDialog(player2.getPlayerName() + " WON A GAME");
                         player2.setMatchScore(player2.getMatchScore() + board.getGameScore(doubleValue, 'B'));
                         infoPanel.addText(5, "enter any key to start the next game");
                         gameWinner = 2;
                     }
-                    matchNumber++;
+   //                 matchNumber++;
+
+                    //Checks if the number of matches played is equal to the score being 
+                    // played to and if yes output the name of winner or if it is a tie
+                    if(matchNumber == playingTo) {
+                    	
+                    	if(player1.getMatchScore() > player2.getMatchScore()) {
+                    		AnnounceGame.WinnerDialog(player1.getPlayerName() + ": MATCH WINNER");
+                            AnotherMatch();
+                            if(restartCall) {
+                            	primaryStage.close();
+                            	Platform.runLater( () -> new Main().start(new Stage()));
+                            }
+                    	}
+                    	
+                    	else if(player1.getMatchScore() < player2.getMatchScore()) {
+                    		
+                    		AnnounceGame.WinnerDialog(player2.getPlayerName() + ": MATCH WINNER");
+                            AnotherMatch();
+                            if(restartCall) {
+                            	primaryStage.close();
+                            	Platform.runLater( () -> new Main().start(new Stage()));
+                            }
+                    		
+                    	}
+                    	
+                    	else {
+                    		AnnounceGame.WinnerDialog("The Match is a Tie");
+                    	}
+                    }
+                    
+                    matchNumber++;                    
                     startNewGame=true;
                 }
             }
@@ -1510,6 +1581,7 @@ public class Main extends Application{
         InformationPanel displayMenu = new InformationPanel();
 //        displayMenu.printMenu(potentialMoves);
 
+        // Creating an array of alphabets from A..ZZ
         String[] alphabets = new String[26];
         for (int i = 0; i < 26; i++) {
             alphabets[i] =  (char)('A' + i) + "";
@@ -1549,13 +1621,146 @@ public class Main extends Application{
                 "one", "two", "three"));
         choiceBox.setPrefWidth(500);
 
+        // displays the potential moves with corresponding alphabets as a menu
         menuOption.OptionsMenu(finalStringArray);
         
 //		HashMap<String, String> userEntry = new HashMap<String, String>();
+        // Creating alphabets to corresponding moves menu 
 		for(int i = 0; i < 500; i++) {
 			userEntry.put(all[i], potentialMoves[i]);
 		}
     }
+    
+    public static void AnotherMatch() {
+		
+    	
+		//creates a popUp window
+		Stage popUp = new Stage();
 
+		// makes sure no changes are made in the Main window while this window is open
+		popUp.initModality(Modality.APPLICATION_MODAL);
+		popUp.setTitle("New Match");
+		popUp.setMinWidth(400);
+		popUp.setHeight(200);
+		
+	    TextPanel textPanel2 = new TextPanel();
+	    TextField nameInput = new TextField();
+		Button button = new Button("Enter");
+
+
+		//label explains how the game works
+		Label displayLabel = new Label();
+//		String myChoice = "";
+//		do {
+		displayLabel.setText("Do you want to play another match?: yes/no");
+//		 myChoice = nameInput.getText(); 
+//		}while (myChoice == "1"|| myChoice == "2" );
+ //   	button.setOnAction(e -> System.out.println(nameInput.getText()));
+		
+		button.disabledProperty().and(Bindings.notEqualIgnoreCase("yes", nameInput.textProperty()).and(Bindings.notEqualIgnoreCase("no", nameInput.textProperty())));
+		button.setText("CLICK ME!!!");
+		boolean invalidInput = false;
+		button.setOnAction(e -> {
+			if(nameInput.getText().equals("yes")) {
+				restartCall = true;
+				popUp.close();
+			}
+			else if(nameInput.getText().equals("no")) {
+				restartCall = false;
+				popUp.close();
+
+				System.out.println("Quit");
+			}
+			else {
+			AnotherMatchErrorMessage();
+			popUp.close();
+			}
+		});
+		
+		VBox matchPopUp = new VBox(displayLabel,nameInput, button);
+		matchPopUp.setStyle("-fx-background-color:Wheat"); //background colour is set
+		StackPane root = new StackPane(matchPopUp);
+		
+//		StackPane root = new StackPane(new VBox(nameInput,button));
+		
+//R    	button.setOnAction(e -> isChoice(nameInput, nameInput.getText()));
+
+		//vbox stores label and is set in centre
+//R		VBox windowDisplay = new VBox();
+//R		windowDisplay.setStyle("-fx-background-color:Wheat"); //background colour is set
+//		windowDisplay.getChildren().addAll(displayLabel, exitDisplay);
+//R		windowDisplay.getChildren().addAll(displayLabel,nameInput, button);
+
+//R		windowDisplay.setAlignment(Pos.CENTER);
+//R		Scene scene = new Scene(windowDisplay);
+		Scene scene = new Scene(root);
+
+//		Scene scene = new Scene(windowDisplay);
+		popUp.setScene(scene);
+		popUp.showAndWait();
+		if(invalidInput)
+			AnotherMatch();
+	} 
+    
+    // Displays a dialog box with error message to the user when an invalid input is entered
+    public static void AnotherMatchErrorMessage() {
+    		
+    	Stage popUp = new Stage();
+
+	// makes sure no changes are made in the Main window while this window is open
+		popUp.initModality(Modality.APPLICATION_MODAL);
+		popUp.setTitle("New Match");
+		popUp.setMinWidth(400);
+		popUp.setHeight(200);
+	
+//    TextPanel textPanel2 = new TextPanel();
+    	TextField nameInput = new TextField();
+		Button button = new Button("Enter");
+
+	//label explains how the game works
+		Label displayLabel = new Label();
+
+		displayLabel.setText("ERROR MESSAGE"
+				+ " Invalid Input: Only Enter yes/no");
+	
+		button.disabledProperty().and(Bindings.notEqualIgnoreCase("yes", nameInput.textProperty()).and(Bindings.notEqualIgnoreCase("no", nameInput.textProperty())));
+		button.setText("CLICK ME!!!");
+		boolean invalidInput = false;
+		button.setOnAction(e -> {
+			if(nameInput.getText().equals("yes")) {
+				restartCall = true;
+				popUp.close();
+			}
+			else if(nameInput.getText().equals("no")) {
+				restartCall = false;
+				popUp.close();
+
+				System.out.println("Go away");
+			}
+		//I am not sure how to do with the else case
+			else {
+	//			popUp.close();
+				AnotherMatchErrorMessage();
+				popUp.close();
+
+			}
+//			invalidInput = true;
+			
+		});
+		
+		VBox matchPopUp = new VBox(displayLabel, nameInput, button);
+		matchPopUp.setStyle("-fx-background-color:wheat"); //background colour is set
+		StackPane root = new StackPane(matchPopUp);
+	
+//		StackPane root = new StackPane(new VBox(displayLabel, nameInput,button));
+	
+		Scene scene = new Scene(root);
+
+		popUp.setScene(scene);
+		popUp.showAndWait();
+		if(invalidInput)
+		AnotherMatch();
+    }
+    
 }
 
