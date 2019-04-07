@@ -90,6 +90,9 @@ public class Main extends Application{
 
     private boolean initialRoll = false;
 
+    //used to detect if the win came from rejecting a double
+    private boolean doubleRejectWin = false;
+
 
 
     public static void main(String[] args) {
@@ -129,13 +132,33 @@ public class Main extends Application{
                     board.updateDoublingCube(doubleValue);
                     if(rolledDice==player1Tracker){
                         playerWithDoublingDice=player2Tracker;
+                        board.setCanDouble(2);
                     } else{
                         playerWithDoublingDice=player1Tracker;
+                        board.setCanDouble(1);
                     }
+
                 } else if (textPanel.getTextFieldText().equals("reject")) {
                     board.boardFlip();
                     infoPanel.addText(textRow, "The player does not want to double. ");
-                    textRow++;
+
+
+                    if(rolledDice==player1Tracker){
+                        infoPanel.addText(5, player1.getPlayerName()+" wins the game");
+                        player1.setMatchScore(player1.getMatchScore() + doubleValue);
+                        infoPanel.addText(5, "enter any key to start the next game");
+                        gameWinner = 1;
+                    }
+                    if(rolledDice==player2Tracker){
+                        infoPanel.addText(5, player2.getPlayerName()+" wins the game");
+                        player2.setMatchScore(player2.getMatchScore() + doubleValue);
+                        infoPanel.addText(5, "enter any key to start the next game");
+                        gameWinner = 2;
+                    }
+
+                    matchNumber++;
+                    startNewGame=true;
+
                 } else {
                     infoPanel.addText(textRow, "Invalid input");
                     textRow++;
@@ -144,7 +167,7 @@ public class Main extends Application{
             }
 
             //if it's the first roll in a new game this is entered to see who will move first
-            if(initialRoll){
+            else if(initialRoll){
                 if(textPanel.getTextFieldText().equals("roll")){
                     int diceResult1 = dice1.rollDice();
                     int diceResult2 = dice2.rollDice();
@@ -249,6 +272,8 @@ public class Main extends Application{
                         waitingForScore = false;
                         playingTo = Integer.parseInt(textPanel.getTextFieldText());
                         infoPanel.addText(5,"You're playing to " + playingTo + " points.");
+                        infoPanel.addText(5, "The arrows on the left show who can request a double.");
+                        infoPanel.addText(5, "Both players can to start.");
 
                         //once playing to score has been established the dice rolls
 
@@ -352,10 +377,15 @@ public class Main extends Application{
                 } else{
                     rolledDice = player2Tracker;
                 }
-                if(prevCommand=="roll" || prevCommand=="move" || (playerWithDoublingDice==2) || (turn%2!=rolledDice)  ){
-                    infoPanel.addText(textRow,"Doubling is not allowed");
+                if(prevCommand=="roll" || prevCommand=="move" ){
+                    infoPanel.addText(textRow,"Doubling is not allowed as you just rolled");
                     textRow++;
-                } else {
+                }
+                else if((playerWithDoublingDice==2) || (turn%2!=rolledDice)){
+                    infoPanel.addText(textRow,"You're not allowed to double right now.");
+                }
+
+                else {
                     textPanel.textField.setText("");
                     board.boardFlip();
                     infoPanel.addText(textRow, "Would you like to double the stakes?");
@@ -365,11 +395,7 @@ public class Main extends Application{
 
                     waitingForDouble=true;
 
-
-
-
                 }
-
             }
 
 

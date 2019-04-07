@@ -69,6 +69,12 @@ public class Board extends BorderPane {
         private GridPane matchNumberGrid = new GridPane();
         private Label matchNumberVisual = new Label();
 
+        private GridPane doubleArrow = new GridPane();
+        private Image upArrow;
+        private ImageView upArrowView;
+        private Image downArrow;
+        private ImageView downArrowView;
+
 
     //label array is used when there's an excess number of pips on a point, 26 are made, one for each position
     private Label[] labelArray = new Label[26];
@@ -90,12 +96,33 @@ public class Board extends BorderPane {
         boardInitialize(); //call to method to initialize the board state
         drawNumbers();
 
-        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, player1NameGrid, player2NameGrid, matchNumberGrid,
+        sp.getChildren().addAll(topLeftGrid, topRightGrid, bottomLeftGrid, bottomRightGrid, barGrid, player1NameGrid, player2NameGrid, matchNumberGrid, doubleArrow,
                 topRightNumbers, topleftNumbers, bottomLeftNumbers, bottomRightNumbers, doubleCubeGrid, player1ScoreGrid, player2ScoreGrid, topBearOffGrid, bottomBearOffGrid);
         setCenter(sp);
     }
 
     private void boardInitialize(){
+
+        //adds the arrows that indicate who can offer to double
+        upArrow = new Image(getClass().getResourceAsStream("up_arrow.png"));
+        downArrow = new Image(getClass().getResourceAsStream("down_arrow.png"));
+
+        upArrowView = new ImageView(upArrow);
+        downArrowView = new ImageView(downArrow);
+
+        upArrowView.setScaleX(.5);
+        upArrowView.setScaleY(.3);
+
+        downArrowView.setScaleX(.5);
+        downArrowView.setScaleY(.3);
+
+        GridPane.setConstraints(upArrowView, 0, 0);
+        GridPane.setConstraints(downArrowView, 0, 1);
+
+        doubleArrow.setPadding(new Insets(165, 0, 0, 15));
+        doubleArrow.setVgap(15);
+        doubleArrow.getChildren().addAll(upArrowView, downArrowView);
+
 
         //labels used to set match number in center of board
         Label matchNumberMatch = new Label(" Match");
@@ -1143,5 +1170,28 @@ public class Board extends BorderPane {
             else if(gameResult==2) gameScore = doubleCube * gameResult;
         }
         return gameScore;
+    }
+
+    //shows on board who can request a double by changing opacity of arrows
+    public void setCanDouble(int playerNumber){
+        //both players can double
+        if(playerNumber == 0){
+            downArrowView.setOpacity(1);
+            upArrowView.setOpacity(1);
+        }
+
+        //player1 can double
+        if(playerNumber == 1){
+            downArrowView.setOpacity(0);
+            upArrowView.setOpacity(1);
+        }
+
+        //player2 can double
+        if(playerNumber == 2){
+            downArrowView.setOpacity(1);
+            upArrowView.setOpacity(0);
+        }
+
+
     }
 }
