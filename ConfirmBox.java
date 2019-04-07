@@ -46,6 +46,8 @@ public class ConfirmBox {
         });
 
         VBox vbox = new VBox(10);
+        vbox.setStyle("-fx-background-color:Wheat"); //background colour is set
+
         vbox.getChildren().addAll(displayMessage, yesButton, noButton);
         vbox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vbox);
