@@ -70,8 +70,9 @@ public class Main extends Application{
     //Borderpane is used to format the stage
     private BorderPane borderPane = new BorderPane();
 
-    private boolean doublesToMove = true;
-    private int doubleCounter=0;
+    private boolean doubledSecondTurn=false;
+    private boolean rolledDoubles=false;
+
     
     private static boolean restartCall = false;
 
@@ -100,7 +101,13 @@ public class Main extends Application{
     private boolean initialRoll = false;
 
     //used to detect if the win came from rejecting a double
-    private boolean doubleRejectWin = false;
+    private boolean doubledThisTurn;
+
+    private int globalDice1;
+    private int globalDice2;
+
+    private boolean blackPipOnBar;
+    private boolean whitePipOnBar;
 
 
 
@@ -112,7 +119,6 @@ public class Main extends Application{
         //Announce game is instantiated and use to announce the game
         AnnounceGame newgame = new AnnounceGame();
         AnnounceGame.loadDialog();
-        AnotherMatch();
 
         //opens up confirm box when exit window is clicked
         primaryStage.setOnCloseRequest(e -> {
@@ -147,11 +153,11 @@ public class Main extends Application{
                         playerWithDoublingDice=player1Tracker;
                         board.setCanDouble(1);
                     }
+                    doubledThisTurn=true;
 
                 } else if (textPanel.getTextFieldText().equals("reject")) {
                     board.boardFlip();
                     infoPanel.addText(textRow, "The player does not want to double. ");
-
 
                     if(rolledDice==player1Tracker){
                         infoPanel.addText(5, player1.getPlayerName()+" wins the game");
@@ -164,6 +170,29 @@ public class Main extends Application{
                         player2.setMatchScore(player2.getMatchScore() + doubleValue);
                         infoPanel.addText(5, "enter any key to start the next game");
                         gameWinner = 2;
+                    }
+
+                    if(player1.getMatchScore() >= playingTo) {
+
+                        if(player1.getMatchScore() > player2.getMatchScore()) {
+                            AnnounceGame.WinnerDialog(player1.getPlayerName() + ": MATCH WINNER");
+                            AnotherMatch();
+                            if(restartCall) {
+                                primaryStage.close();
+                                Platform.runLater( () -> new Main().start(new Stage()));
+                            }
+                        }
+
+                        else if(player2.getMatchScore() >= player1.getMatchScore()) {
+
+                            AnnounceGame.WinnerDialog(player2.getPlayerName() + ": MATCH WINNER");
+                            AnotherMatch();
+                            if(restartCall) {
+                                primaryStage.close();
+                                Platform.runLater( () -> new Main().start(new Stage()));
+                            }
+
+                        }
                     }
 
                     matchNumber++;
@@ -227,8 +256,11 @@ public class Main extends Application{
                 borderPane.setCenter(board);
 
                 board.setPlayerScore(1, player1.getPlayerName(), player1.getMatchScore());
+                System.out.println("score" + player1.getMatchScore());
+
 
                 board.setPlayerScore(2, player2.getPlayerName(), player2.getMatchScore());
+                System.out.println("score" + player2.getMatchScore());
 
                 board.setMatchNumber(matchNumber);
 
@@ -359,6 +391,7 @@ public class Main extends Application{
             else if (textPanel.getTextFieldText().equals("next")){
                 prevCommand = "next";
                 turn++;
+                doubledThisTurn=false;
                 board.boardFlip();
                 infoPanel.addText(textRow, "Type roll to roll the dice.");
                 if (player1.isTurn(turn, player1Tracker)) {
@@ -382,29 +415,27 @@ public class Main extends Application{
              */
             else if (textPanel.getTextFieldText().equals("double")){
 
-                if(turn%2==player1Tracker){
-                    rolledDice = player1Tracker;
-                } else{
-                    rolledDice = player2Tracker;
-                }
-                if(prevCommand=="roll" || prevCommand=="move" ){
-                    infoPanel.addText(textRow,"Doubling is not allowed as you just rolled");
-                    textRow++;
-                }
-                else if((playerWithDoublingDice==2) || (turn%2!=rolledDice)){
-                    infoPanel.addText(textRow,"You're not allowed to double right now.");
-                }
+                if(!doubledThisTurn) {
+                    if (turn % 2 == player1Tracker) {
+                        rolledDice = player1Tracker;
+                    } else {
+                        rolledDice = player2Tracker;
+                    }
+                    if (prevCommand == "roll" || prevCommand == "move") {
+                        infoPanel.addText(textRow, "Doubling is not allowed as you just rolled");
+                        textRow++;
+                    } else if ((playerWithDoublingDice == 2) || (turn % 2 != rolledDice)) {
+                        infoPanel.addText(textRow, "You're not allowed to double right now.");
+                    } else {
+                        textPanel.textField.setText("");
+                        board.boardFlip();
+                        infoPanel.addText(textRow, "Would you like to double the stakes?");
+                        textRow++;
+                        infoPanel.addText(textRow, "Type 'accept' or 'reject'");
+                        textRow++;
 
-                else {
-                    textPanel.textField.setText("");
-                    board.boardFlip();
-                    infoPanel.addText(textRow, "Would you like to double the stakes?");
-                    textRow++;
-                    infoPanel.addText(textRow, "Type 'accept' or 'reject'");
-                    textRow++;
-
-                    waitingForDouble=true;
-
+                        waitingForDouble = true;
+                    }
                 }
             }
 
@@ -436,11 +467,34 @@ public class Main extends Application{
 
             	String inputText1 = textPanel.getTextFieldText();
             	String inputText = inputText1.toUpperCase();
-            	System.out.println(inputText);
+            	System.out.println("input text" +inputText);
             	String stringMove = userEntry.get(inputText);
-            	System.out.println(stringMove);
-                moveInput(stringMove.split(" ")[0].replace("-", " "));
-                moveInput(stringMove.split(" ")[1].replace("-", " "));
+            	System.out.println("string move" +stringMove);
+
+
+                System.out.println("string move two electric boogaloo" +stringMove);
+
+                String[] moves;
+
+                moves = stringMove.split(" ");
+
+                moves[0] = moves[0].replace("-", " ");
+                moves[0] = moves[0].replace("*", "");
+
+                moves[1] = moves[1].replace("-", " ");
+                moves[1] = moves[1].replace("*", "");
+
+
+                System.out.println(moves[0]);
+                System.out.println(moves[1]);
+
+                moveInput(moves[0]);
+                moveInput(moves[1]);
+
+                if(rolledDoubles) {
+                    doubledSecondTurn=true;
+                    calculateMoves(globalDice1, globalDice2);
+                }
             
   //              moveInput(textPanel.getTextFieldText());
                 //checks if a player has won the game, if they have a new game is set up
@@ -457,11 +511,13 @@ public class Main extends Application{
                         infoPanel.addText(5, "enter any key to start the next game");
                         gameWinner = 2;
                     }
+
+
    //                 matchNumber++;
                     //Checks if the number of matches played is equal to the score being 
                     // played to and if yes output the name of winner or if it is a tie
-                    if(matchNumber == playingTo) {
-                    	
+                    if(player1.getMatchScore() >= playingTo || player2.getMatchScore() >= playingTo) {
+
                     	if(player1.getMatchScore() > player2.getMatchScore()) {
                     		AnnounceGame.WinnerDialog(player1.getPlayerName() + ": MATCH WINNER");
                             AnotherMatch();
@@ -470,18 +526,18 @@ public class Main extends Application{
                             	Platform.runLater( () -> new Main().start(new Stage()));
                             }
                     	}
-                    	
-                    	else if(player1.getMatchScore() < player2.getMatchScore()) {
-                    		
+
+                    	else if(player2.getMatchScore() >= player1.getMatchScore()) {
+
                     		AnnounceGame.WinnerDialog(player2.getPlayerName() + ": MATCH WINNER");
                             AnotherMatch();
                             if(restartCall) {
                             	primaryStage.close();
                             	Platform.runLater( () -> new Main().start(new Stage()));
                             }
-                    		
+
                     	}
-                    	
+
                     	else {
                     		AnnounceGame.WinnerDialog("The Match is a Tie");
                     	}
@@ -507,8 +563,8 @@ public class Main extends Application{
 
                     //Checks if the number of matches played is equal to the score being 
                     // played to and if yes output the name of winner or if it is a tie
-                    if(matchNumber == playingTo) {
-                    	
+                    if(player1.getMatchScore() >= playingTo || player2.getMatchScore() >= playingTo) {
+
                     	if(player1.getMatchScore() > player2.getMatchScore()) {
                     		AnnounceGame.WinnerDialog(player1.getPlayerName() + ": MATCH WINNER");
                             AnotherMatch();
@@ -517,18 +573,18 @@ public class Main extends Application{
                             	Platform.runLater( () -> new Main().start(new Stage()));
                             }
                     	}
-                    	
-                    	else if(player1.getMatchScore() < player2.getMatchScore()) {
-                    		
+
+                    	else if(player2.getMatchScore() >= playingTo) {
+
                     		AnnounceGame.WinnerDialog(player2.getPlayerName() + ": MATCH WINNER");
                             AnotherMatch();
                             if(restartCall) {
                             	primaryStage.close();
                             	Platform.runLater( () -> new Main().start(new Stage()));
                             }
-                    		
+
                     	}
-                    	
+
                     	else {
                     		AnnounceGame.WinnerDialog("The Match is a Tie");
                     	}
@@ -683,8 +739,28 @@ public class Main extends Application{
 
         }
         if(secondOff){
-            board.removePip(point, board.pointHolder[point].getPipColour());
-            board.addBearOff(board.pointHolder[point].getPipColour());
+            if(player1.isTurn(turn, player1Tracker)){
+                if(player1.getColour() == 'B'){
+                    board.removePip(board.pointHolder[point].getInverse(), board.pointHolder[board.pointHolder[point].getInverse()].getPipColour());
+                    board.addBearOff(board.pointHolder[board.pointHolder[point].getInverse()].getPipColour());
+                }
+                else{
+                    board.removePip(point, board.pointHolder[point].getPipColour());
+                    board.addBearOff(board.pointHolder[point].getPipColour());
+                }
+            }
+
+            if(player2.isTurn(turn, player2Tracker)){
+                if(player2.getColour() == 'B'){
+                    board.removePip(board.pointHolder[point].getInverse(), board.pointHolder[board.pointHolder[point].getInverse()].getPipColour());
+                    board.addBearOff(board.pointHolder[board.pointHolder[point].getInverse()].getPipColour());
+                }
+                else{
+                    board.removePip(point, board.pointHolder[point].getPipColour());
+                    board.addBearOff(board.pointHolder[point].getPipColour());
+                }
+            }
+
         }
     }
 
@@ -771,6 +847,7 @@ public class Main extends Application{
         infoPanel.addText(textRow, "No moves available");
         textRow++;
         turn++;
+        doubledThisTurn=false;
         board.boardFlip();
         infoPanel.addText(textRow, "Type roll to roll the dice.");
         if (player1.isTurn(turn, player1Tracker)) {
@@ -792,6 +869,8 @@ public class Main extends Application{
     public void calculateMoves(int dice1, int dice2) {
         String[] potentialMoves = new String[500];
         boolean deadPipOnBarWhite=false, deadPipOnBarBlack=false;
+        globalDice1 = dice1;
+        globalDice2 = dice2;
 
         int k = 0;
         char pipColour;
@@ -807,6 +886,7 @@ public class Main extends Application{
 
             //moving from bar
             if (board.pointHolder[25].getPipColour() == 'W' && board.getNumberOfPipsMain(25) > 0) {
+                whitePipOnBar = true;
                 deadPipOnBarWhite=true;
                 int point = 25;
                 //dice1 safe
@@ -951,7 +1031,7 @@ public class Main extends Application{
                 }
             }
 
-            if(!deadPipOnBarWhite) {
+            if(!deadPipOnBarWhite && !whitePipOnBar) {
 
                 for (int i = 24; i > 0; i--) {
 
@@ -1089,7 +1169,7 @@ public class Main extends Application{
                 }
 
                 //bear off functionality
-                if (whiteBearOffReady) {
+                if (whiteBearOffReady && !whitePipOnBar) {
 
                     //dice1 bear off
                     boolean canBearOff = true;
@@ -1177,7 +1257,8 @@ public class Main extends Application{
         if (pipColour == 'B') {
             //moving from bar
 
-            if (board.pointHolder[0].getPipColour() == 'B' && board.getNumberOfPips(25) > 0) {
+            if (board.pointHolder[0].getPipColour() == 'B' && board.getNumberOfPipsMain(25) > 0) {
+                blackPipOnBar = true;
                 deadPipOnBarBlack=true;
 
                 int point = 0;
@@ -1199,7 +1280,7 @@ public class Main extends Application{
 
                     for (int j = 1; j < 25; j++) {
 
-                        if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0) {
+                        if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0) {
 
                             if (j + dice2 < 25 && (board.getNumberOfPips(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
                                 potentialMoves[k] = "Bar-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse());
@@ -1217,7 +1298,7 @@ public class Main extends Application{
                 }
 
                 //dice1 hit
-                if (point + dice1 < 25 && board.pointHolder[point + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(point + dice1) == 1) {
+                if (point + dice1 < 25 && board.pointHolder[point + dice1].getPipColour() == 'W' && board.getNumberOfPips(point + dice1) == 1) {
                     int currentMove = point + dice1;
 
                     if (currentMove + dice2 < 25 && (board.getNumberOfPips(currentMove + dice2) == 0 || board.pointHolder[currentMove + dice2].getPipColour() == 'B')) {
@@ -1234,7 +1315,7 @@ public class Main extends Application{
 
                     for (int j = 1; j < 25; j++) {
 
-                        if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0) {
+                        if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0) {
 
                             if (j + dice2 < 25 && (board.getNumberOfPips(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
                                 potentialMoves[k] = "Bar*-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse());
@@ -1270,7 +1351,7 @@ public class Main extends Application{
 
                     for (int j = 1; j < 25; j++) {
 
-                        if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0) {
+                        if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0) {
 
                             if (j + dice1 < 25 && (board.getNumberOfPips(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
                                 potentialMoves[k] = "Bar-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse());
@@ -1307,7 +1388,7 @@ public class Main extends Application{
 
                         if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0) {
 
-                            if (j + dice1 < 25 && (board.getNumberOfPipsMain(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
+                            if (j + dice1 < 25 && (board.getNumberOfPips(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
                                 potentialMoves[k] = "Bar*-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse());
                                 k++;
                                 deadPipOnBarBlack=false;
@@ -1323,36 +1404,36 @@ public class Main extends Application{
                 }
             }
 
-            if(!deadPipOnBarBlack){
+            if(!deadPipOnBarBlack && !blackPipOnBar){
 
 
             for (int i = 1; i < 25; i++) {
-                if (board.pointHolder[i].getPipColour() == 'B' && board.getNumberOfPipsMain(i) > 0) {
+                if (board.pointHolder[i].getPipColour() == 'B' && board.getNumberOfPips(i) > 0) {
 
                     //dice1 safe
-                    if (i + dice1 < 25 && (board.getNumberOfPipsMain(i + dice1) == 0 || board.pointHolder[i + dice1].getPipColour() == 'B')) {
+                    if (i + dice1 < 25 && (board.getNumberOfPips(i + dice1) == 0 || board.pointHolder[i + dice1].getPipColour() == 'B')) {
                         int currentMove = i + dice1;
 
-                        if (currentMove + dice2 < 25 && (board.getNumberOfPipsMain(currentMove + dice2) == 0 || board.pointHolder[currentMove + dice2].getPipColour() == 'B')) {
+                        if (currentMove + dice2 < 25 && (board.getNumberOfPips(currentMove + dice2) == 0 || board.pointHolder[currentMove + dice2].getPipColour() == 'B')) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice2].getInverse());
                             k++;
                         }
 
-                        if (currentMove + dice2 < 25 && board.pointHolder[currentMove + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice2) == 1) {
+                        if (currentMove + dice2 < 25 && board.pointHolder[currentMove + dice2].getPipColour() == 'W' && board.getNumberOfPips(currentMove + dice2) == 1) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice2].getInverse() + "*");
                             k++;
                         }
 
                         for (int j = i; j < 25; j++) {
 
-                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0 && (j != i || board.getNumberOfPipsMain(j) > 1)) {
+                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0 && (j != i || board.getNumberOfPips(j) > 1)) {
 
-                                if (j + dice2 < 25 && (board.getNumberOfPipsMain(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
+                                if (j + dice2 < 25 && (board.getNumberOfPips(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse());
                                     k++;
                                 }
 
-                                if (j + dice2 < 25 && board.pointHolder[j + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice2) == 1) {
+                                if (j + dice2 < 25 && board.pointHolder[j + dice2].getPipColour() == 'W' && board.getNumberOfPips(j + dice2) == 1) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse()) + "*";
                                     k++;
                                 }
@@ -1361,29 +1442,29 @@ public class Main extends Application{
                     }
 
                     //dice1 hit
-                    if (i + dice1 < 25 && board.pointHolder[i + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(i + dice1) == 1) {
+                    if (i + dice1 < 25 && board.pointHolder[i + dice1].getPipColour() == 'W' && board.getNumberOfPips(i + dice1) == 1) {
                         int currentMove = i + dice1;
 
-                        if (currentMove + dice2 < 25 && (board.getNumberOfPipsMain(currentMove + dice2) == 0 || board.pointHolder[currentMove + dice2].getPipColour() == 'B')) {
+                        if (currentMove + dice2 < 25 && (board.getNumberOfPips(currentMove + dice2) == 0 || board.pointHolder[currentMove + dice2].getPipColour() == 'B')) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice2].getInverse());
                             k++;
                         }
 
-                        if (currentMove + dice2 < 25 && board.pointHolder[currentMove + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice2) == 1) {
+                        if (currentMove + dice2 < 25 && board.pointHolder[currentMove + dice2].getPipColour() == 'W' && board.getNumberOfPips(currentMove + dice2) == 1) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice2].getInverse() + "*");
                             k++;
                         }
 
                         for (int j = i; j < 25; j++) {
 
-                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0 && (j != i || board.getNumberOfPipsMain(j) > 1)) {
+                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0 && (j != i || board.getNumberOfPips(j) > 1)) {
 
-                                if (j + dice2 < 25 && (board.getNumberOfPipsMain(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
+                                if (j + dice2 < 25 && (board.getNumberOfPips(j + dice2) == 0 || board.pointHolder[j + dice2].getPipColour() == 'B')) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse());
                                     k++;
                                 }
 
-                                if (j + dice2 < 25 && board.pointHolder[j + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice2) == 1) {
+                                if (j + dice2 < 25 && board.pointHolder[j + dice2].getPipColour() == 'W' && board.getNumberOfPips(j + dice2) == 1) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice2].getInverse()) + "*";
                                     k++;
                                 }
@@ -1392,29 +1473,29 @@ public class Main extends Application{
                     }
 
                     //dice2 safe
-                    if (i + dice2 < 25 && (board.getNumberOfPipsMain(i + dice2) == 0 || board.pointHolder[i + dice2].getPipColour() == 'B')) {
+                    if (i + dice2 < 25 && (board.getNumberOfPips(i + dice2) == 0 || board.pointHolder[i + dice2].getPipColour() == 'B')) {
                         int currentMove = i + dice2;
 
-                        if (currentMove + dice1 < 25 && (board.getNumberOfPipsMain(currentMove + dice1) == 0 || board.pointHolder[currentMove + dice1].getPipColour() == 'B')) {
+                        if (currentMove + dice1 < 25 && (board.getNumberOfPips(currentMove + dice1) == 0 || board.pointHolder[currentMove + dice1].getPipColour() == 'B')) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice1].getInverse());
                             k++;
                         }
 
-                        if (currentMove + dice1 < 25 && board.pointHolder[currentMove + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice1) == 1) {
+                        if (currentMove + dice1 < 25 && board.pointHolder[currentMove + dice1].getPipColour() == 'W' && board.getNumberOfPips(currentMove + dice1) == 1) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice1].getInverse() + "*");
                             k++;
                         }
 
                         for (int j = i; j < 25; j++) {
 
-                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0 && (j != i || board.getNumberOfPipsMain(j) > 1)) {
+                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0 && (j != i || board.getNumberOfPips(j) > 1)) {
 
-                                if (j + dice1 < 25 && (board.getNumberOfPipsMain(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
+                                if (j + dice1 < 25 && (board.getNumberOfPips(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse());
                                     k++;
                                 }
 
-                                if (j + dice1 < 25 && board.pointHolder[j + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice1) == 1) {
+                                if (j + dice1 < 25 && board.pointHolder[j + dice1].getPipColour() == 'W' && board.getNumberOfPips(j + dice1) == 1) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + " " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse()) + "*";
                                     k++;
                                 }
@@ -1423,15 +1504,15 @@ public class Main extends Application{
                     }
 
                     //dice2 hit
-                    if (i + dice2 < 25 && board.pointHolder[i + dice2].getPipColour() == 'W' && board.getNumberOfPipsMain(i + dice2) == 1) {
+                    if (i + dice2 < 25 && board.pointHolder[i + dice2].getPipColour() == 'W' && board.getNumberOfPips(i + dice2) == 1) {
                         int currentMove = i + dice2;
 
-                        if (currentMove + dice1 < 25 && (board.getNumberOfPipsMain(currentMove + dice1) == 0 || board.pointHolder[currentMove + dice1].getPipColour() == 'B')) {
+                        if (currentMove + dice1 < 25 && (board.getNumberOfPips(currentMove + dice1) == 0 || board.pointHolder[currentMove + dice1].getPipColour() == 'B')) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice1].getInverse());
                             k++;
                         }
 
-                        if (currentMove + dice1 < 25 && board.pointHolder[currentMove + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(currentMove + dice1) == 1) {
+                        if (currentMove + dice1 < 25 && board.pointHolder[currentMove + dice1].getPipColour() == 'W' && board.getNumberOfPips(currentMove + dice1) == 1) {
                             potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[currentMove].getInverse() + "-" + (board.pointHolder[currentMove + dice1].getInverse() + "*");
                             k++;
                         }
@@ -1439,14 +1520,14 @@ public class Main extends Application{
                         for (int j = i; j < 25; j++) {
 
 
-                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPipsMain(j) > 0 && (j != i || board.getNumberOfPipsMain(j) > 1)) {
+                            if (board.pointHolder[j].getPipColour() == 'B' && board.getNumberOfPips(j) > 0 && (j != i || board.getNumberOfPips(j) > 1)) {
 
-                                if (j + dice1 < 25 && (board.getNumberOfPipsMain(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
+                                if (j + dice1 < 25 && (board.getNumberOfPips(j + dice1) == 0 || board.pointHolder[j + dice1].getPipColour() == 'B')) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse());
                                     k++;
                                 }
 
-                                if (j + dice1 < 25 && board.pointHolder[j + dice1].getPipColour() == 'W' && board.getNumberOfPipsMain(j + dice1) == 1) {
+                                if (j + dice1 < 25 && board.pointHolder[j + dice1].getPipColour() == 'W' && board.getNumberOfPips(j + dice1) == 1) {
                                     potentialMoves[k] = board.pointHolder[i].getInverse() + "-" + board.pointHolder[currentMove].getInverse() + "* " + board.pointHolder[j].getInverse() + "-" + (board.pointHolder[j + dice1].getInverse()) + "*";
                                     k++;
                                 }
@@ -1463,7 +1544,7 @@ public class Main extends Application{
             }
 
             //bear off functionality
-            if (blackBearOffReady) {
+            if (blackBearOffReady && !blackPipOnBar) {
 
                 //dice1 bear off
                 boolean canBearOff = true;
@@ -1490,7 +1571,7 @@ public class Main extends Application{
 
                             boolean nestedCanBearOff = true;
                             for (int i = 25 - dice2; i < 25; i++) {
-                                if (nestedCanBearOff && board.pointHolder[i].getPipColour() == 'B' && board.getNumberOfPipsMain(i) > 0 && (i != j || board.getNumberOfPips(i) > 1)) {
+                                if (nestedCanBearOff && board.pointHolder[i].getPipColour() == 'B' && board.getNumberOfPips(i) > 0 && (i != j || board.getNumberOfPips(i) > 1)) {
                                     nestedCanBearOff = false;
                                     potentialMoves[k] = board.pointHolder[j].getInverse() + "-Off " + board.pointHolder[i].getInverse() + "-Off";
                                     k++;
@@ -1530,7 +1611,7 @@ public class Main extends Application{
 
                             boolean nestedCanBearOff = true;
                             for (int i = 25 - dice1; i < 25; i++) {
-                                if (nestedCanBearOff && board.pointHolder[i].getPipColour() == 'B' && board.getNumberOfPipsMain(i) > 0 && (i != j || board.getNumberOfPips(i) > 1)) {
+                                if (nestedCanBearOff && board.pointHolder[i].getPipColour() == 'B' && board.getNumberOfPips(i) > 0 && (i != j || board.getNumberOfPips(i) > 1)) {
                                     nestedCanBearOff = false;
                                     potentialMoves[k] = board.pointHolder[j].getInverse() + "-Off " + board.pointHolder[i].getInverse() + "-Off";
                                     k++;
@@ -1561,20 +1642,12 @@ public class Main extends Application{
             noPossibleMoves();
         }
 
-        if(dice1 == dice2 && doublesToMove){
-            textPanel.button.setOnAction(e -> {
-                calculateMoves(dice1, dice2);
-            });
-            doublesToMove = false;
+        if(dice1==dice2 & !doubledSecondTurn){
+            rolledDoubles = true;
         }
-        if(dice1==dice2 && doubleCounter==0){
-            doublesToMove=true;
-            doubleCounter=1;
-        }
-        else{
-            doublesToMove=false;
-            doubleCounter=0;
-        }
+        else rolledDoubles = false;
+
+        doubledSecondTurn = false;
 
         AnnounceGame menuOption = new AnnounceGame();
 
@@ -1629,6 +1702,8 @@ public class Main extends Application{
 		for(int i = 0; i < 500; i++) {
 			userEntry.put(all[i], potentialMoves[i]);
 		}
+		whitePipOnBar=false;
+		blackPipOnBar=false;
     }
     
     public static void AnotherMatch() {

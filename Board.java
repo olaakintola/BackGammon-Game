@@ -417,6 +417,10 @@ public class Board extends BorderPane {
                 addPip(finalPos, pipColour);
             }
         }
+        for(int i=1; i<25; i++){
+            System.out.println(i + " num of pips: " + pointHolder[i].getPlayerPip());
+            System.out.println(i + " colour: " + pointHolder[i].getPipColour());
+        }
     }
 
     //method used by board initialize to add pips to the points
@@ -1168,6 +1172,29 @@ public class Board extends BorderPane {
             else if(gameResult==3) gameScore = doubleCube * gameResult;
 
             else if(gameResult==2) gameScore = doubleCube * gameResult;
+
+            else gameScore = doubleCube;
+        }
+
+        else if(pipColour == 'B'){
+            for(int i=19; i<25; i++){
+                if(pointHolder[i].getPipColour() == 'B' && pointHolder[i].getPlayerPip() > 0) gameResult = 3;
+            }
+
+            for(int i=7; i<19; i++){
+                if(pointHolder[i].getPipColour() == 'B' && pointHolder[i].getPlayerPip() > 0) gameResult = 2;
+            }
+
+            if(bottomBearOffGridNumberOfPips > 0) {
+                gameResult = 1;
+                gameScore = doubleCube * gameResult;
+            }
+
+            else if(gameResult==3) gameScore = doubleCube * gameResult;
+
+            else if(gameResult==2) gameScore = doubleCube * gameResult;
+
+            else gameScore = doubleCube;
         }
         return gameScore;
     }
