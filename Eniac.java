@@ -51,21 +51,25 @@ public class Eniac implements BotAPI {
 	   int totalMeNumber = 0;
 	   int totalOpposingNumber = 0;
 			   
-	   for(int i = me.getId(); i < Backgammon.NUM_PLAYERS; i++) {
-		      for(int j = 1; j<Board.NUM_PIPS; j++) {
-		    	   int meNumber = board.getNumCheckers(i, j);
+	 //  for(int i = me.getId(); i < Backgammon.NUM_PLAYERS; i++) {
+		      for(int j = 1; j<=Board.NUM_PIPS; j++) {
+		    	   int meNumber = board.getNumCheckers(me.getId(), j);
 		    	   int numberMultiplybyPipNumber = meNumber*j;
 		    	   totalMeNumber += numberMultiplybyPipNumber;
 		      }
-	   }
+	//   }
+	   System.out.println("totalMeNumber"+ totalMeNumber);
+
 	   
-	   for(int i = opponent.getId(); i < Backgammon.NUM_PLAYERS; i++) {
-		   for(int j =1; j <Board.NUM_PIPS; j++) {
-			   int opposingNumber = board.getNumCheckers(i, j);
+//	   for(int i = opponent.getId(); i < Backgammon.NUM_PLAYERS; i++) {
+		   for(int j =1; j <=Board.NUM_PIPS; j++) {
+			   int opposingNumber = board.getNumCheckers(opponent.getId(), j);
 			   int opposingNumberMultiplybyPipNumber = opposingNumber*j;
 			   totalOpposingNumber += opposingNumberMultiplybyPipNumber;
 		   }
-	   }
+	//   }
+	   System.out.println("totalopposing" + totalOpposingNumber );
+
 	   
 	   int pipDifference = totalMeNumber -  totalOpposingNumber ;
 		   
