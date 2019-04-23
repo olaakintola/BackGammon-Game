@@ -31,9 +31,11 @@ public class Eniac implements BotAPI {
         // Add your code here
    	int i = getPipCountDifference();
    	int j = countHomeCheckers();
+   	int k = blockBlotDifference();
     	
     	System.out.println(i);
     	System.out.println(j);
+		System.out.println(k);
     	System.out.println();
         return "1";
     }
@@ -98,6 +100,19 @@ public class Eniac implements BotAPI {
 	   
 	return differenceHome;
 	   
+   }
+
+   public int blockBlotDifference(){
+    	int blotNumber = 0;
+    	int blockNumber = 0;
+
+	   for(int i = 1; i<=Board.NUM_PIPS; i++) {
+		   int numberOfPips = board.getNumCheckers(me.getId(), i);
+		   if(numberOfPips > 1) blockNumber++;
+		   if(numberOfPips == 1) blotNumber++;
+	   }
+
+	   return blockNumber - blotNumber;
    }
    
     
