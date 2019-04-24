@@ -1,5 +1,12 @@
 public class Eniac implements BotAPI {
 
+	/*
+	* Team Members
+	* Weronika Wolska
+	* Ola A
+	* Shane Byrne
+	* */
+
     // The public API of Bot must not change
     // This is ONLY class that you can edit in the program
     // Rename Bot to the name of your team. Use camel case.
