@@ -49,6 +49,7 @@ public class Eniac implements BotAPI {
 			moveScores[i] =  1*countHomeCheckers() + 5*blockBlotDifference() - 4*getPipCountDifference();
 		}
 
+		//checks if there's an overwhelming advantage, if so the bot doubles. otherwise it just returns the best play
 		if(match.canDouble(0) && ((getPipCountDifference() > 20 && blockBlotDifference() > 2) || getPipCountDifference() > 30)){
 			returnString = "double";
 		}
