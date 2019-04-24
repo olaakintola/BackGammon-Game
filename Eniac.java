@@ -30,15 +30,14 @@ public class Eniac implements BotAPI {
         // Add your code here
 		String returnString;
 
-		System.out.println("pipCountDifference: " + getPipCountDifference());
-		System.out.println("blockBlotDifference: " + blockBlotDifference());
-
 		int id = me.getId();
 
 		int numOfPossiblePlays = possiblePlays.number();
 
 		int[] moveScores = new int[numOfPossiblePlays];
 
+		// get all the possible moves, calculate the scores for the moves
+        // and store the scores in moveScores array
 		for(int i=0;i<numOfPossiblePlays;i++) {
 			int[][] boardCopy = board.get();
 			Play play = possiblePlays.get(i);
@@ -47,7 +46,7 @@ public class Eniac implements BotAPI {
 				boardCopy[id][move.getFromPip()]--;
 				boardCopy[id][move.getToPip()]++;
 			}
-			moveScores[i] = 4*getPipCountDifference() + 1*countHomeCheckers() + 5*blockBlotDifference();
+			moveScores[i] =  1*countHomeCheckers() + 5*blockBlotDifference() - 4*getPipCountDifference();
 		}
 
 		if(match.canDouble(0) && ((getPipCountDifference() > 20 && blockBlotDifference() > 2) || getPipCountDifference() > 30)){
@@ -55,7 +54,9 @@ public class Eniac implements BotAPI {
 		}
 		else returnString = Integer.toString(findMaxIndex(moveScores)+1);
 
+
 		return returnString;
+
     }
 
     //determines whether or not to accept a double
@@ -72,12 +73,6 @@ public class Eniac implements BotAPI {
 		return doubleDecision;
 	}
 
-
-    public Eniac() {
-		// TODO Auto-generated constructor stub
-
-    	//System.out.println(board.getNumCheckers(0, 1));
-	}
 
 
 	//returns number of blocks - number of blots
@@ -153,6 +148,7 @@ public class Eniac implements BotAPI {
 
     }
 
+    // find the index of the max number in an array
     private int findMaxIndex(int[] a){
         int max = 0;
 
