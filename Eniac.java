@@ -28,6 +28,7 @@ public class Eniac implements BotAPI {
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
+		String returnString;
 
 		int id = me.getId();
 
@@ -45,12 +46,17 @@ public class Eniac implements BotAPI {
 				boardCopy[id][move.getFromPip()]--;
 				boardCopy[id][move.getToPip()]++;
 			}
-			moveScores[i] = 4*getPipCountDifference() + 1*countHomeCheckers() + 5*blockBlotDifference();
+			moveScores[i] =  1*countHomeCheckers() + 5*blockBlotDifference() - 4*getPipCountDifference();
 		}
 
+		if(match.canDouble(0) && ((getPipCountDifference() > 20 && blockBlotDifference() > 2) || getPipCountDifference() > 30)){
+			returnString = "double";
+		}
+		else returnString = Integer.toString(findMaxIndex(moveScores)+1);
 
-        // return the move with the highest score as command
-		return Integer.toString(findMaxIndex(moveScores)+1);
+
+		return returnString;
+
     }
 
 	public String getDoubleDecision() {

@@ -29,6 +29,7 @@ public class Bot1 implements BotAPI {
     public String getCommand(Plays possiblePlays) {
         // Add your code here
         int playNumber = 1 + (int) (Math.random() * possiblePlays.number());
+
         return Integer.toString(playNumber);
     }
 
