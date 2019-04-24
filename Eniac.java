@@ -29,6 +29,9 @@ public class Eniac implements BotAPI {
     public String getCommand(Plays possiblePlays) {
         // Add your code here
 
+		System.out.println("pipCountDifference: " + getPipCountDifference());
+		System.out.println("blockBlotDifference: " + blockBlotDifference());
+
 		int id = me.getId();
 
 		int numOfPossiblePlays = possiblePlays.number();
@@ -51,11 +54,21 @@ public class Eniac implements BotAPI {
 		return Integer.toString(findMaxIndex(moveScores)+1);
     }
 
+	public String getDoubleDecision() {
+		String doubleDecision;
+
+		if(match.getLength() < 10) doubleDecision = "y";
+		else if(getPipCountDifference() > -10 && blockBlotDifference() > -1) doubleDecision = "y";
+		else doubleDecision = "n";
+
+		return doubleDecision;
+	}
+
 
     public Eniac() {
 		// TODO Auto-generated constructor stub
 
-    	System.out.println(board.getNumCheckers(0, 1));
+    	//System.out.println(board.getNumCheckers(0, 1));
 	}
 
 
@@ -72,10 +85,6 @@ public class Eniac implements BotAPI {
 	   return blockNumber - blotNumber;
    }
 
-    public String getDoubleDecision() {
-        // Add your code here
-        return "n";
-    }
 
     public int getPipCountDifference() {
         int totalMeNumber = 0;
@@ -88,7 +97,7 @@ public class Eniac implements BotAPI {
             totalMeNumber += numberMultiplybyPipNumber;
         }
         //   }
-        System.out.println("totalMeNumber"+ totalMeNumber);
+        //System.out.println("totalMeNumber"+ totalMeNumber);
 
 
 //	   for(int i = opponent.getId(); i < Backgammon.NUM_PLAYERS; i++) {
@@ -98,7 +107,7 @@ public class Eniac implements BotAPI {
             totalOpposingNumber += opposingNumberMultiplybyPipNumber;
         }
         //   }
-        System.out.println("totalopposing" + totalOpposingNumber );
+        //System.out.println("totalopposing" + totalOpposingNumber );
 
 
         int pipDifference = totalMeNumber -  totalOpposingNumber ;
@@ -117,14 +126,14 @@ public class Eniac implements BotAPI {
             totalMeInHome += board.getNumCheckers(me.getId(), j);
         }
         // You can comment out
-        System.out.println("totalMeInHome: "+totalMeInHome);
+        //System.out.println("totalMeInHome: "+totalMeInHome);
 
         for(int j = 1; j <= 6; j++) {
             totalOpponentInHome += board.getNumCheckers(opponent.getId(), j);
         }
 
         // You can comment out
-        System.out.println("totalOpponentInHome: "+totalOpponentInHome);
+        //System.out.println("totalOpponentInHome: "+totalOpponentInHome);
 
         int differenceHome = totalMeInHome - totalOpponentInHome;
 
@@ -143,8 +152,6 @@ public class Eniac implements BotAPI {
 
         return max;
     }
-
-    
 
 
 }
