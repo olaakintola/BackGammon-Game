@@ -125,7 +125,7 @@ public class Eniac implements BotAPI {
             totalOpponentInHome += board.getNumCheckers(opponent.getId(), j);
         }
 
-        int differenceHome = totalMeInHome - totalOpponentInHome;
+        int differenceHome =  -(totalMeInHome - totalOpponentInHome);
 
         return differenceHome;
 
