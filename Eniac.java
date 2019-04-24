@@ -3,7 +3,7 @@ public class Eniac implements BotAPI {
 	/*
 	* Team Members
 	* Weronika Wolska
-	* Ola A
+	* Ola Akintola
 	* Shane Byrne
 	* */
 
