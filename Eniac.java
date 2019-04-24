@@ -101,37 +101,32 @@ public class Eniac implements BotAPI {
    }
 
 
+    // This calculates the difference between the distance that my bot has to get to 
+    // end of the game has opposed to the distance of the opposing player finishing.
     public int getPipCountDifference() {
         int totalMeNumber = 0;
         int totalOpposingNumber = 0;
 
-        //  for(int i = me.getId(); i < Backgammon.NUM_PLAYERS; i++) {
         for(int j = 1; j<=Board.NUM_PIPS; j++) {
             int meNumber = board.getNumCheckers(me.getId(), j);
             int numberMultiplybyPipNumber = meNumber*j;
             totalMeNumber += numberMultiplybyPipNumber;
         }
-        //   }
-        //System.out.println("totalMeNumber"+ totalMeNumber);
 
 
-//	   for(int i = opponent.getId(); i < Backgammon.NUM_PLAYERS; i++) {
         for(int j =1; j <=Board.NUM_PIPS; j++) {
             int opposingNumber = board.getNumCheckers(opponent.getId(), j);
             int opposingNumberMultiplybyPipNumber = opposingNumber*j;
             totalOpposingNumber += opposingNumberMultiplybyPipNumber;
         }
-        //   }
-        //System.out.println("totalopposing" + totalOpposingNumber );
 
 
-        int pipDifference = totalMeNumber -  totalOpposingNumber ;
+        int pipDifference = totalMeNumber - totalOpposingNumber ;
 
         return pipDifference;
     }
 
-
-
+   // This gets the number of checkers on each players home board
     public int countHomeCheckers() {
 
         int totalMeInHome = 0;
@@ -140,17 +135,13 @@ public class Eniac implements BotAPI {
         for(int j = 1; j <=6;j++) {
             totalMeInHome += board.getNumCheckers(me.getId(), j);
         }
-        // You can comment out
-        //System.out.println("totalMeInHome: "+totalMeInHome);
+
 
         for(int j = 1; j <= 6; j++) {
             totalOpponentInHome += board.getNumCheckers(opponent.getId(), j);
         }
 
-        // You can comment out
-        //System.out.println("totalOpponentInHome: "+totalOpponentInHome);
-
-        int differenceHome = totalMeInHome - totalOpponentInHome;
+        int differenceHome =  -(totalMeInHome - totalOpponentInHome);
 
         return differenceHome;
 
