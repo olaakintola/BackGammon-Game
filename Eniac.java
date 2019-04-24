@@ -29,15 +29,14 @@ public class Eniac implements BotAPI {
     public String getCommand(Plays possiblePlays) {
         // Add your code here
 
-		System.out.println("pipCountDifference: " + getPipCountDifference());
-		System.out.println("blockBlotDifference: " + blockBlotDifference());
-
 		int id = me.getId();
 
 		int numOfPossiblePlays = possiblePlays.number();
 
 		int[] moveScores = new int[numOfPossiblePlays];
 
+		// get all the possible moves, calculate the scores for the moves
+        // and store the scores in moveScores array
 		for(int i=0;i<numOfPossiblePlays;i++) {
 			int[][] boardCopy = board.get();
 			Play play = possiblePlays.get(i);
@@ -50,7 +49,7 @@ public class Eniac implements BotAPI {
 		}
 
 
-
+        // return the move with the highest score as command
 		return Integer.toString(findMaxIndex(moveScores)+1);
     }
 
@@ -64,12 +63,6 @@ public class Eniac implements BotAPI {
 		return doubleDecision;
 	}
 
-
-    public Eniac() {
-		// TODO Auto-generated constructor stub
-
-    	//System.out.println(board.getNumCheckers(0, 1));
-	}
 
 
    public int blockBlotDifference(){
@@ -141,6 +134,7 @@ public class Eniac implements BotAPI {
 
     }
 
+    // find the index of the max number in an array
     private int findMaxIndex(int[] a){
         int max = 0;
 
