@@ -58,11 +58,15 @@ public class Eniac implements BotAPI {
 		return returnString;
     }
 
+    //determines whether or not to accept a double
 	public String getDoubleDecision() {
 		String doubleDecision;
 
-		if(match.getLength() < 10) doubleDecision = "y";
-		else if(getPipCountDifference() > -10 && blockBlotDifference() > -1) doubleDecision = "y";
+		//if the game hasn't gone five turns yet the double is always accepted
+		if(match.getLength() < 5) doubleDecision = "y";
+		//if the pipcountdifference or the blockblotdifference isn't too low the double is accepted
+		else if(getPipCountDifference() > -10 || blockBlotDifference() > -1) doubleDecision = "y";
+		//otherwise if both the pipcountdifference and the blockblotdifference are poor, say no to the double
 		else doubleDecision = "n";
 
 		return doubleDecision;
@@ -76,10 +80,14 @@ public class Eniac implements BotAPI {
 	}
 
 
+	//returns number of blocks - number of blots
    public int blockBlotDifference(){
     	int blotNumber = 0;
     	int blockNumber = 0;
 
+    	//loops through the board, checks each point to see if Eniac has pips on point
+	   //if there's one pip blot number is incremented
+	   //if there's more than one pip block number is incremented
 	   for(int i = 1; i<=Board.NUM_PIPS; i++) {
 		   int numberOfPips = board.getNumCheckers(me.getId(), i);
 		   if(numberOfPips > 1) blockNumber++;
