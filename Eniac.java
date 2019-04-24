@@ -46,7 +46,7 @@ public class Eniac implements BotAPI {
 				boardCopy[id][move.getFromPip()]--;
 				boardCopy[id][move.getToPip()]++;
 			}
-			moveScores[i] = 4*getPipCountDifference() + 1*countHomeCheckers();
+			moveScores[i] = 4*getPipCountDifference() + 1*countHomeCheckers() + 5*blockBlotDifference();
 		}
 
 
